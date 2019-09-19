@@ -1,0 +1,26 @@
+server.port=8090
+server.servlet.context-path= /Arch
+#Conexion a la Base de datos
+#spring.datasource.jndi-name=java:jboss/datasources/PostgreSQLDataSource
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://localhost:5432/FuncionariosMAG
+spring.datasource.username=postgres
+spring.datasource.password=magap1.2
+#JPA
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQL94Dialect
+spring.jpa.properties.hibernate.id.new_generator_mappings = false
+spring.jpa.properties.hibernate.format_sql = true
+
+#Contenedor de aplicaciones tomcat
+spring.datasource.tomcat.max-wait=20000
+spring.datasource.tomcat.max-active=50
+spring.datasource.tomcat.max-idle=20
+spring.datasource.tomcat.min-idle=15
+
+
+
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE 
+
+spring.jpa.hibernate.ddl-auto = create
+# DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
