@@ -2,17 +2,20 @@ package ec.gob.mag.central.catalogo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+//import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@EnableResourceServer
+@SpringBootApplication
 public class MicroCentralCatalogos extends SpringBootServletInitializer {
+	private static Class<MicroCentralCatalogos> applicationClass = MicroCentralCatalogos.class;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MicroCentralCatalogos.class, args);
@@ -22,8 +25,6 @@ public class MicroCentralCatalogos extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(applicationClass);
 	}
-
-	private static Class<MicroCentralCatalogos> applicationClass = MicroCentralCatalogos.class;
 
 	@Bean
 	public ResourceBundleMessageSource messageSource() {

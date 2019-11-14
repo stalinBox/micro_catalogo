@@ -37,7 +37,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 //============== LOMBOK =============
 @Getter
 @Setter
-@ToString(of = "itemId")
+@ToString(of = "iteId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
