@@ -15,6 +15,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -90,6 +91,12 @@ public class Item implements java.io.Serializable {
 	@JsonInclude(Include.NON_NULL)
 	@JsonBackReference(value = "item-catalogo")
 	private Catalogo catalogo;
+	
+	@Transient
+	@ApiModelProperty(value = " Información Catalogo", notes = "***")
+	@JsonProperty("catalogoTR")
+	@JsonInclude(Include.NON_NULL)
+	private Catalogo catalogoTR;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipcol_id")

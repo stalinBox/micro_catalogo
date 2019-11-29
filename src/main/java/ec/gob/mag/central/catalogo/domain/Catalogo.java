@@ -11,6 +11,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -81,6 +82,7 @@ public class Catalogo implements Serializable {
 	@JsonProperty("timeStamp")
 	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
+	
 
 	@ApiModelProperty(value = " Estado de catalogo", notes = "***", position = 10)
 	@Column(name = "estado", length = 2)
