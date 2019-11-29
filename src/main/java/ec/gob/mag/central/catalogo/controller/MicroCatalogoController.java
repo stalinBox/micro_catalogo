@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -60,7 +61,7 @@ public class MicroCatalogoController implements ErrorController {
 	@RequestMapping(value = "/catalogo/findByIdTipoCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> getCatalogo(@PathVariable Long id) {
+	public List<Catalogo> getCatalogo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
 		return catalogos;
@@ -75,7 +76,7 @@ public class MicroCatalogoController implements ErrorController {
 	@RequestMapping(value = "/catalogo/findFirtsLevelByIdTipoCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> firstLevel(@PathVariable Long id) {
+	public List<Catalogo> firstLevel(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findFirstLevelByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
 		return catalogos;
@@ -90,7 +91,7 @@ public class MicroCatalogoController implements ErrorController {
 	@RequestMapping(value = "/catalogo/findSecondLevelByIdTipoCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> secondLevel(@PathVariable Long id) {
+	public List<Catalogo> secondLevel(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findSecondLevelByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
 		return catalogos;
@@ -105,7 +106,7 @@ public class MicroCatalogoController implements ErrorController {
 	@RequestMapping(value = "/item/findByCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get Items by Catalogo", response = Item.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Item> getItem(@PathVariable Long id) {
+	public List<Item> getItem(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Item> items = itemservice.findByCatalogoId(id);
 		return items;
 	}
@@ -119,7 +120,7 @@ public class MicroCatalogoController implements ErrorController {
 	@RequestMapping(value = "/catalogo/findByCatalogoPadre/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get Catalago Hijo by Catalogo Padre", response = Item.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> getCatalogoHijo(@PathVariable Long id) {
+	public List<Catalogo> getCatalogoHijo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByCatalogoPadre(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
 		return catalogos;
@@ -134,7 +135,7 @@ public class MicroCatalogoController implements ErrorController {
 	@RequestMapping(value = "/catalogo/findByIdCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Item.class)
 	@ResponseStatus(HttpStatus.OK)
-	public Catalogo finByIdCatalago(@PathVariable Long id) {
+	public Catalogo finByIdCatalago(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		Catalogo catalogo = catalogoservice.findByCatId(id).get();
 		return catalogo;
 	}
