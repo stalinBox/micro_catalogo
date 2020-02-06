@@ -25,12 +25,4 @@ public class MicroCentralCatalogos extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(applicationClass);
 	}
-
-	@Bean
-	public ResourceBundleMessageSource messageSource() {
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("messages");
-		return messageSource;
-	}
-
 }
