@@ -73,6 +73,12 @@ public class Catalogo implements Serializable {
 	@JsonProperty("catIdentificativo")
 	@JsonInclude(Include.NON_NULL)
 	private String catIdentificativo;
+	
+	@ApiModelProperty(value = "Codigo Catalogo")
+	@Column(name = "cat_codigo", nullable = false)
+	@JsonProperty("catCodigo")
+	@JsonInclude(Include.NON_NULL)
+	private String catCodigo;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
 	@Temporal(TemporalType.TIMESTAMP)
