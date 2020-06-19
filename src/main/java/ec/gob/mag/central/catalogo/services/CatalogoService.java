@@ -22,6 +22,7 @@ public class CatalogoService {
 	@Autowired
 	@Qualifier("catalogoRepository")
 	private CatalogoRepository catalogoRepository;
+
 	@Autowired
 	private MessageSource messageSource;
 
@@ -51,8 +52,9 @@ public class CatalogoService {
 	public Optional<Catalogo> findByCatId(Long catId) {
 		Optional<Catalogo> catalogo = catalogoRepository.findById(catId);
 		if (!catalogo.isPresent())
-			throw new CatalogoNotFoundException(String.format(messageSource.getMessage(
-					"error.entity_not_exist_id_cat.message", null, LocaleContextHolder.getLocale()), catId));
+			throw new CatalogoNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					catId));
 		return catalogo;
 	}
 
