@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.domain.Item;
+import ec.gob.mag.central.catalogo.domain.TipoCatalogo;
 import ec.gob.mag.central.catalogo.services.AgrupacionService;
 import ec.gob.mag.central.catalogo.services.CatalogoService;
 import ec.gob.mag.central.catalogo.services.ItemService;
+import ec.gob.mag.central.catalogo.services.TipoCatalogoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
@@ -47,6 +49,10 @@ public class MicroCatalogoController implements ErrorController {
 	@Autowired
 	@Qualifier("agrupacionService")
 	private AgrupacionService agrupacionservice;
+	
+	@Autowired
+	@Qualifier("tipoCatalogoService")
+	private TipoCatalogoService tipoCatalogoService;
 
 	@Autowired
 	@Qualifier("itemservice")
@@ -118,7 +124,7 @@ public class MicroCatalogoController implements ErrorController {
 	 * @return catalogos: los catalogos padres
 	 */
 	@RequestMapping(value = "/catalogo/findByCatalogoPadre/{id}", method = RequestMethod.GET)
-	@ApiOperation(value = "Get Catalago Hijo by Catalogo Padre", response = Item.class)
+	@ApiOperation(value = "Get Catalago Hijo by Catalogo Padre", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Catalogo> getCatalogoHijo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByCatalogoPadre(id);
@@ -133,12 +139,29 @@ public class MicroCatalogoController implements ErrorController {
 	 * @return catalogos: Retorna los catalogos hijosF
 	 */
 	@RequestMapping(value = "/catalogo/findByIdCatalogo/{id}", method = RequestMethod.GET)
-	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Item.class)
+	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
 	public Catalogo finByIdCatalago(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		Catalogo catalogo = catalogoservice.findByCatId(id).get();
 		return catalogo;
 	}
+	
+	/**
+	 * Controller para buscar todos los tipos Catalogos
+	 * 
+	 * @param 
+	 * @return List<tipo_catalogo>: Retorna todos los tipos de catalogos
+	 */
+	@RequestMapping(value = "/tipoCatalogo/findAll", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene todos los tipo Catalogos", response = TipoCatalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public List<TipoCatalogo> findAllTipoCatalogo(@RequestHeader(name = "Authorization") String token) {
+		List<TipoCatalogo> tipos = tipoCatalogoService.findAll();
+		return tipos;
+	}
+	
+	
+	
 
 	@Override
 	public String getErrorPath() {

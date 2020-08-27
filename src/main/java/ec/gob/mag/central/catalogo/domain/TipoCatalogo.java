@@ -52,13 +52,13 @@ public class TipoCatalogo implements Serializable {
 	private Long tipocatId;
 
 	@ApiModelProperty(value = "Nombre de Tipo Catalogo")
-	@JoinColumn(name = "tipcat_nombre")
+	@Column(name = "tipcat_nombre")
 	@JsonProperty("tipocatNombre")
 	@JsonInclude(Include.NON_NULL)
 	private String tipocatNombre;
 
 	@ApiModelProperty(value = "Descripcion de Tipo Catalogo")
-	@JoinColumn(name = "tipcat_descripcion")
+	@Column(name = "tipcat_descripcion")
 	@JsonProperty("tipocatDescripcion")
 	@JsonInclude(Include.NON_NULL)
 	private String tipocatDescripcion;
