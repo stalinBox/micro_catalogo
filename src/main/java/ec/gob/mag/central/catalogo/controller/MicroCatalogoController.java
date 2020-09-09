@@ -147,7 +147,7 @@ public class MicroCatalogoController implements ErrorController {
 	}
 	
 	/**
-	 * Controller para buscar todos los tipos Catalogos
+	 * Controller para buscar todos los tipos Catalogos (Excepto RENAGRO)
 	 * 
 	 * @param 
 	 * @return List<tipo_catalogo>: Retorna todos los tipos de catalogos
@@ -156,7 +156,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ApiOperation(value = "Obtiene todos los tipo Catalogos", response = TipoCatalogo.class)
 	@ResponseStatus(HttpStatus.OK)
 	public List<TipoCatalogo> findAllTipoCatalogo(@RequestHeader(name = "Authorization") String token) {
-		List<TipoCatalogo> tipos = tipoCatalogoService.findAll();
+		List<TipoCatalogo> tipos = tipoCatalogoService.findTiposCatalogos("RENAGRO");
 		return tipos;
 	}
 	
