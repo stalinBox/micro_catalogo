@@ -49,7 +49,7 @@ public class MicroCatalogoController implements ErrorController {
 	@Autowired
 	@Qualifier("agrupacionService")
 	private AgrupacionService agrupacionservice;
-	
+
 	@Autowired
 	@Qualifier("tipoCatalogoService")
 	private TipoCatalogoService tipoCatalogoService;
@@ -145,11 +145,11 @@ public class MicroCatalogoController implements ErrorController {
 		Catalogo catalogo = catalogoservice.findByCatId(id).get();
 		return catalogo;
 	}
-	
+
 	/**
 	 * Controller para buscar todos los tipos Catalogos (Excepto RENAGRO)
 	 * 
-	 * @param 
+	 * @param
 	 * @return List<tipo_catalogo>: Retorna todos los tipos de catalogos
 	 */
 	@RequestMapping(value = "/tipoCatalogo/findAll", method = RequestMethod.GET)
@@ -159,9 +159,6 @@ public class MicroCatalogoController implements ErrorController {
 		List<TipoCatalogo> tipos = tipoCatalogoService.findTiposCatalogos("RENAGRO");
 		return tipos;
 	}
-	
-	
-	
 
 	@Override
 	public String getErrorPath() {

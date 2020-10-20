@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,8 +42,8 @@ import lombok.ToString;
 public class TipoCatalogo implements Serializable {
 	private static final long serialVersionUID = -3124864204002344027L;
 
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Tipo Catalogo")
 	@Id
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Tipo Catalogo")
 	@Column(name = "tipcat_id", unique = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("tipocatId")
