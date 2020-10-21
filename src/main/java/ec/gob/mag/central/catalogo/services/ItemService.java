@@ -26,29 +26,24 @@ public class ItemService {
 	private ItemRepository itemRepository;
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	@Qualifier("catalogoRepository")
 	private CatalogoRepository catalogoRepository;
-	
-	
-	
-	public List<Item> clearList(List<Item> its)
-	{
-		its.stream().map(i ->{
+
+	public List<Item> clearList(List<Item> its) {
+		its.stream().map(i -> {
 			clearObject(i);
 			return i;
 		}).collect(Collectors.toList());
-		
+
 		return its;
 	}
-	
-	
-	public void clearObject(Item item)
-	{
-		Catalogo c=catalogoRepository.findById(item.getCatalogo().getCatId()).get();
+
+	public void clearObject(Item item) {
+		Catalogo c = catalogoRepository.findById(item.getCatalogo().getCatId()).get();
 		item.setCatalogoTR(c);
-		//return item;
+		// return item;
 	}
 
 	/**
@@ -63,7 +58,7 @@ public class ItemService {
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Catalogo.class.getName()));
-		clearList(items);
+//		clearList(items);
 		return items;
 	}
 

@@ -91,7 +91,7 @@ public class Item implements java.io.Serializable {
 	@JsonInclude(Include.NON_NULL)
 	@JsonBackReference(value = "item-catalogo")
 	private Catalogo catalogo;
-	
+
 	@Transient
 	@ApiModelProperty(value = " Información Catalogo", notes = "***")
 	@JsonProperty("catalogoTR")
