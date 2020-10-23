@@ -2,6 +2,7 @@ package ec.gob.mag.central.catalogo.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Entity;
@@ -14,10 +15,8 @@ import javax.persistence.TemporalType;
 
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.UpdateTimestamp;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
@@ -38,7 +37,7 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "tbl_catalogo", schema = "sc_catalogos")
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "ord", scope = Catalogo.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "ord", scope = Catalogo.class)
 
 public class Catalogo implements Serializable {
 	private static final long serialVersionUID = -1383240679545632350L;
@@ -103,7 +102,7 @@ public class Catalogo implements Serializable {
 	@PrePersist
 	public void catPersist() {
 		this.estado = "ac";
-		this.timeStamp = null;
+		this.timeStamp = new Date();
 	}
 
 }

@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,13 +14,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ec.gob.mag.central.catalogo.util.Util;
@@ -45,14 +42,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 //========== JPA ======================
 @Entity
 @Table(name = "tbl_item", schema = "sc_catalogos")
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "ord", scope = Item.class)
-
 public class Item implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2631428883075299326L;
 
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Item")
 	@Id
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Item")
 	@Column(name = "ite_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("iteId")
@@ -84,19 +79,13 @@ public class Item implements java.io.Serializable {
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cat_id")
 	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
-	@JsonProperty("catalogo")
-	@JsonInclude(Include.NON_NULL)
-	@JsonBackReference(value = "item-catalogo")
-	private Catalogo catalogo;
-
-	@Transient
-	@ApiModelProperty(value = " Información Catalogo", notes = "***")
 	@JsonProperty("catalogoTR")
 	@JsonInclude(Include.NON_NULL)
-	private Catalogo catalogoTR;
+	@JsonManagedReference
+	private Catalogo catalogo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipcol_id")
