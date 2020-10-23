@@ -82,9 +82,9 @@ public class Catalogo implements Serializable {
 
 	@ApiModelProperty(value = "Id padre del registro")
 	@Column(name = "id_anterior")
-	@JsonProperty("idPadre")
+	@JsonProperty("idAnterior")
 	@JsonInclude(Include.NON_NULL)
-	private Long idPadre;
+	private Long idAnterior;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
 	@Temporal(TemporalType.TIMESTAMP)
