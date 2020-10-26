@@ -159,7 +159,7 @@ public class MicroCatalogoController implements ErrorController {
 	 * @return List<tipo_catalogo>: Retorna todos los tipos de catalogos
 	 */
 	@RequestMapping(value = "/tipoCatalogo/findAll", method = RequestMethod.GET)
-	@ApiOperation(value = "Obtiene todos los tipo Catalogos", response = TipoCatalogo.class)
+	@ApiOperation(value = "Obtiene todos los tipo Catalogos")
 	@ResponseStatus(HttpStatus.OK)
 	public List<TipoCatalogo> findAllTipoCatalogo(@RequestHeader(name = "Authorization") String token) {
 		List<TipoCatalogo> tipos = tipoCatalogoService.findTiposCatalogos("RENAGRO");

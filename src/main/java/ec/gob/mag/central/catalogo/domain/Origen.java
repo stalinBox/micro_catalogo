@@ -15,10 +15,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ec.gob.mag.central.catalogo.util.Util;
@@ -41,11 +39,11 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "tbl_origen", schema = "sc_catalogos")
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "ord", scope = Origen.class)
 public class Origen implements Serializable {
 	private static final long serialVersionUID = 1722665206845571246L;
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Origen")
+
 	@Id
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Origen")
 	@Column(name = "ori_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("oriId")

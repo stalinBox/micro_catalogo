@@ -2,11 +2,11 @@ package ec.gob.mag.central.catalogo.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,11 +21,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +42,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@Data
 //========== JPA ======================
 
 @Entity
@@ -48,21 +50,22 @@ import lombok.ToString;
 public class Agrupacion implements Serializable {
 	private static final long serialVersionUID = -4017650183258693515L;
 
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla agrupacion")
 	@Id
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla agrupacion")
 	@Column(name = "agr_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("agrId")
 	private Long agrId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tipcat_id")
-	@ApiModelProperty(value = " Clave foránea de la tabla Tipo catalogo", notes = "***")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "tipcat_id", insertable = false, updatable = false)
+	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
 	@JsonProperty("tipoCatalogo")
 	@JsonInclude(Include.NON_NULL)
+	@JsonManagedReference
 	private TipoCatalogo tipoCatalogo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ori_id")
 	@ApiModelProperty(value = " Clave foránea de la tabla Origen", notes = "***")
 	@JsonProperty("origen")

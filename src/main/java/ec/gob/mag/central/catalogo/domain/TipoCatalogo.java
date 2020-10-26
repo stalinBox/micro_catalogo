@@ -2,10 +2,14 @@ package ec.gob.mag.central.catalogo.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Id;
-
+import javax.persistence.OneToMany;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.PrePersist;
@@ -13,9 +17,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
@@ -75,6 +81,12 @@ public class TipoCatalogo implements Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tipoCatalogo", cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JsonProperty("agrupacion")
+	@JsonInclude(Include.NON_NULL)
+	@JsonManagedReference
+	private List<Agrupacion> agrupacion;
 
 	@PrePersist
 	public void prePersist() {

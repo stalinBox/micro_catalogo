@@ -42,8 +42,8 @@ import lombok.ToString;
 public class Catalogo implements Serializable {
 	private static final long serialVersionUID = -1383240679545632350L;
 
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
 	@Id
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
 	@Column(name = "cat_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("catId")
