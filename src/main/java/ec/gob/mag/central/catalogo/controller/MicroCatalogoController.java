@@ -70,6 +70,7 @@ public class MicroCatalogoController implements ErrorController {
 	public List<Catalogo> getCatalogo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
+		
 		LOGGER.info("/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString());
 		return catalogos;
 	}

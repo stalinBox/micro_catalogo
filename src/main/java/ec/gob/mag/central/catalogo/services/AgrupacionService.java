@@ -150,6 +150,25 @@ public class AgrupacionService {
 	}
 
 	/**
+	 * Servicio para buscar por Identificardor de catalogo padre
+	 * 
+	 * @param id: Identificador del catalogo padre
+	 * @return lista: Listado de catalogos hijos
+	 */
+	public List<Long> findcatIdHijo(Long id) {
+		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdHijo(id);
+		if (catalogos.isEmpty())
+			throw new CatalogoNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					this.getClass().getName()));
+		List<Long> lista = new ArrayList<>();
+		for (int contador = 0; contador < catalogos.size(); contador++) {
+			lista.add(catalogos.get(contador).getCatIdHijo());
+		}
+		return lista;
+	}
+
+	/**
 	 * Servicio para guardar una agrupación
 	 * 
 	 * @param catalogo

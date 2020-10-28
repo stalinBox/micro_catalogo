@@ -17,6 +17,8 @@ public interface AgrupacionRepository extends CrudRepository<Agrupacion, Long> {
 
 	List<Agrupacion> findByCatIdPadre(Long catPadre);
 
+	List<Agrupacion> findByCatIdHijo(Long catHijo);
+
 	@SuppressWarnings("unchecked")
 	Agrupacion save(Agrupacion agrupacion);
 

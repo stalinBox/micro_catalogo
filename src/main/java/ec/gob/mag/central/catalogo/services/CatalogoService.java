@@ -2,6 +2,7 @@ package ec.gob.mag.central.catalogo.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,8 +10,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import ec.gob.mag.central.catalogo.domain.Agrupacion;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
+import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
 import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
 
 /**
@@ -24,7 +27,28 @@ public class CatalogoService {
 	private CatalogoRepository catalogoRepository;
 
 	@Autowired
+	@Qualifier("agrupacionRepository")
+	private AgrupacionRepository agrupacionRepository;
+
+	@Autowired
 	private MessageSource messageSource;
+
+	public void clearObjectLazyVariables(Catalogo usuario) {
+		usuario.getAgrupacion().stream().map(u -> {
+//			u.setTipoCatalogo(null);
+			u.getTipoCatalogo().setAgrupacion(null);
+			return u;
+		}).collect(Collectors.toList());
+	}
+
+	public List<Catalogo> clearListLazyVariables(List<Catalogo> usuarios) {
+		if (usuarios != null)
+			usuarios = usuarios.stream().map(u -> {
+				clearObjectLazyVariables(u);
+				return u;
+			}).collect(Collectors.toList());
+		return usuarios;
+	}
 
 	/**
 	 * Servicio para encontrar todos los catalogos
@@ -38,7 +62,7 @@ public class CatalogoService {
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
-
+		clearListLazyVariables(catalogos);
 		return catalogos;
 	}
 
@@ -55,6 +79,7 @@ public class CatalogoService {
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					catId));
+		clearObjectLazyVariables(catalogo.get());
 		return catalogo;
 	}
 
@@ -70,6 +95,17 @@ public class CatalogoService {
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Catalogo.class.getName()));
+//		clearListLazyVariables(catalogos);
+		catalogos.stream().forEach(m -> {
+			List<Agrupacion> agr = agrupacionRepository.findByCatIdHijo(m.getCatId());
+			m.setAgrupacion(agr);
+//			m.getAgrupacion().stream().forEach(n -> {
+//				List<Agrupacion> agr = agrupacionRepository.findByCatIdHijo(m.getCatId());
+//				System.out.println("");
+//			});
+		});
+
+		clearListLazyVariables(catalogos);
 		return catalogos;
 	}
 

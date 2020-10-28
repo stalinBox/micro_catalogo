@@ -57,21 +57,6 @@ public class Agrupacion implements Serializable {
 	@JsonProperty("agrId")
 	private Long agrId;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "tipcat_id", insertable = false, updatable = false)
-	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
-	@JsonProperty("tipoCatalogo")
-	@JsonInclude(Include.NON_NULL)
-	@JsonManagedReference
-	private TipoCatalogo tipoCatalogo;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ori_id")
-	@ApiModelProperty(value = " Clave foránea de la tabla Origen", notes = "***")
-	@JsonProperty("origen")
-	@JsonInclude(Include.NON_NULL)
-	private Origen origen;
-
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
 	@Column(name = "cat_id_padre", nullable = false)
 	@JsonProperty("catIdPadre")
@@ -97,6 +82,21 @@ public class Agrupacion implements Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "tipcat_id", insertable = false, updatable = false)
+	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
+	@JsonProperty("tipoCatalogo")
+	@JsonInclude(Include.NON_NULL)
+	@JsonManagedReference
+	private TipoCatalogo tipoCatalogo;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ori_id")
+	@ApiModelProperty(value = " Clave foránea de la tabla Origen", notes = "***")
+	@JsonProperty("origen")
+	@JsonInclude(Include.NON_NULL)
+	private Origen origen;
 
 	@PrePersist
 	public void prePersist() {

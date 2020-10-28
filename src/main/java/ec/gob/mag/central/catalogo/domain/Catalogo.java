@@ -2,10 +2,15 @@ package ec.gob.mag.central.catalogo.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.PrePersist;
@@ -37,8 +42,6 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "tbl_catalogo", schema = "sc_catalogos")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "ord", scope = Catalogo.class)
-
 public class Catalogo implements Serializable {
 	private static final long serialVersionUID = -1383240679545632350L;
 
@@ -98,6 +101,12 @@ public class Catalogo implements Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "agr_id")
+	@JsonProperty("agrupacion")
+	@JsonInclude(Include.NON_NULL)
+	private List<Agrupacion> agrupacion;
 
 	@PrePersist
 	public void catPersist() {
