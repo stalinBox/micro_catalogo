@@ -17,6 +17,8 @@ public interface CatalogoRepository extends CrudRepository<Catalogo, Long> {
 
 	Optional<Catalogo> findByCatId(Integer catId);
 
+	Optional<Catalogo> findByCatCodigo(String catCodigo);
+
 	@SuppressWarnings("unchecked")
 	Catalogo save(Catalogo catalogo);
 

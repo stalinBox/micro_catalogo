@@ -35,7 +35,6 @@ public class CatalogoService {
 
 	public void clearObjectLazyVariables(Catalogo usuario) {
 		usuario.getAgrupacion().stream().map(u -> {
-//			u.setTipoCatalogo(null);
 			u.getTipoCatalogo().setAgrupacion(null);
 			return u;
 		}).collect(Collectors.toList());
@@ -84,6 +83,23 @@ public class CatalogoService {
 	}
 
 	/**
+	 * Servicio para buscar catalogos por car Codigo
+	 * 
+	 * @param id: Identificador de la cobertura
+	 * @return catalogo: Retorna todos los catalogos filtrados por el parámetros de
+	 *         entrada
+	 */
+	public Optional<Catalogo> findByCatCodigo(String catCodigo) {
+		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigo(catCodigo);
+		if (!catalogo.isPresent())
+			throw new CatalogoNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					catCodigo));
+		clearObjectLazyVariables(catalogo.get());
+		return catalogo;
+	}
+
+	/**
 	 * Servicio para buscar por catalogos hijos
 	 * 
 	 * @param ids: catalogo padre
@@ -95,14 +111,9 @@ public class CatalogoService {
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Catalogo.class.getName()));
-//		clearListLazyVariables(catalogos);
 		catalogos.stream().forEach(m -> {
 			List<Agrupacion> agr = agrupacionRepository.findByCatIdHijo(m.getCatId());
 			m.setAgrupacion(agr);
-//			m.getAgrupacion().stream().forEach(n -> {
-//				List<Agrupacion> agr = agrupacionRepository.findByCatIdHijo(m.getCatId());
-//				System.out.println("");
-//			});
 		});
 
 		clearListLazyVariables(catalogos);

@@ -70,7 +70,7 @@ public class MicroCatalogoController implements ErrorController {
 	public List<Catalogo> getCatalogo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
-		
+
 		LOGGER.info("/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString());
 		return catalogos;
 	}
@@ -144,6 +144,7 @@ public class MicroCatalogoController implements ErrorController {
 	 * @param id: Identificador del catalogo
 	 * @return catalogos: Retorna los catalogos hijosF
 	 */
+	@Deprecated
 	@RequestMapping(value = "/catalogo/findByIdCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -166,6 +167,22 @@ public class MicroCatalogoController implements ErrorController {
 		List<TipoCatalogo> tipos = tipoCatalogoService.findTiposCatalogos("RENAGRO");
 		LOGGER.info("/tipoCatalogo/findAll" + tipos.toString());
 		return tipos;
+	}
+
+	/**
+	 * Controller para buscar un catalogo hijo por un catalogo padre
+	 * 
+	 * @param id: Identificador del catalogo
+	 * @return catalogos: Retorna los catalogos hijosF
+	 */
+	@RequestMapping(value = "/catalogo/findByCatCodigo/{catCodigo}", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene un catalogo por cat Codigo", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public Catalogo finByCatCodigoCatalago(@PathVariable String catCodigo,
+			@RequestHeader(name = "Authorization") String token) {
+		Catalogo catalogo = catalogoservice.findByCatCodigo(catCodigo).get();
+		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString());
+		return catalogo;
 	}
 
 	@Override
