@@ -100,6 +100,23 @@ public class CatalogoService {
 	}
 
 	/**
+	 * Servicio para buscar catalogos por car Codigo
+	 * 
+	 * @param id: Identificador de la cobertura
+	 * @return catalogo: Retorna todos los catalogos filtrados por el parámetros de
+	 *         entrada
+	 */
+	public Optional<Catalogo> findByIdAnterior(Long catCodigo) {
+		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnterior(catCodigo);
+		if (!catalogo.isPresent())
+			throw new CatalogoNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					catCodigo));
+		clearObjectLazyVariables(catalogo.get());
+		return catalogo;
+	}
+
+	/**
 	 * Servicio para buscar por catalogos hijos
 	 * 
 	 * @param ids: catalogo padre

@@ -185,6 +185,22 @@ public class MicroCatalogoController implements ErrorController {
 		return catalogo;
 	}
 
+	/**
+	 * Controller para buscar un catalogo hijo por un catalogo padre
+	 * 
+	 * @param id: Identificador del catalogo
+	 * @return catalogos: Retorna los catalogos hijosF
+	 */
+	@RequestMapping(value = "/catalogo/findByIdAnterior/{idanterior}", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene un catalogo por id anterior", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public Catalogo findByIdAnterior(@PathVariable Long idanterior,
+			@RequestHeader(name = "Authorization") String token) {
+		Catalogo catalogo = catalogoservice.findByIdAnterior(idanterior).get();
+		LOGGER.info("/catalogo/findByIdAnterior/{idanterior}" + catalogo.toString());
+		return catalogo;
+	}
+
 	@Override
 	public String getErrorPath() {
 		// TODO Auto-generated method stub
