@@ -81,6 +81,13 @@ public class TipoCatalogo implements Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+	
+	@ApiModelProperty(value = "Eliminado logico", notes = "***")
+	@Column(name = "tipcat_eliminado")
+	@JsonProperty("tipocatEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean tipocatEliminado;
+	
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tipoCatalogo", cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JsonProperty("agrupacion")

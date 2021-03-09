@@ -12,7 +12,7 @@ public interface TipoCatalogoRepository extends CrudRepository<TipoCatalogo, Lon
 
 	List<TipoCatalogo> findAll();
 	
-	@Query("SELECT t FROM TipoCatalogo t WHERE UPPER(t.tipocatNombre) NOT LIKE %?1% AND UPPER(t.tipocatDescripcion) NOT LIKE %?1%")
+	@Query("SELECT t FROM TipoCatalogo t WHERE UPPER(t.tipocatNombre) NOT LIKE %?1% AND UPPER(t.tipocatDescripcion) NOT LIKE %?1% AND t.tipocatEliminado = false")
 	List<TipoCatalogo> findTiposCatalogos(String nombre);
 	
 

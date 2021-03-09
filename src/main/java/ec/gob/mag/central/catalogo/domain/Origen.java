@@ -68,6 +68,12 @@ public class Origen implements Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+	
+	@ApiModelProperty(value = "Eliminado logico", notes = "***")
+	@Column(name = "ori_eliminado")
+	@JsonProperty("oriEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean oriEliminado;
 
 	@PrePersist
 	public void prePersist() {

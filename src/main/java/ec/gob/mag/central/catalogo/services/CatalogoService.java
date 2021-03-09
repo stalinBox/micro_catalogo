@@ -90,7 +90,7 @@ public class CatalogoService {
 	 *         entrada
 	 */
 	public Optional<Catalogo> findByCatCodigo(String catCodigo) {
-		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigo(catCodigo);
+		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigoAndCatEliminadoFalse(catCodigo);
 		if (!catalogo.isPresent())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -107,7 +107,7 @@ public class CatalogoService {
 	 *         entrada
 	 */
 	public Optional<Catalogo> findByIdAnterior(Long catCodigo) {
-		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnterior(catCodigo);
+		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnteriorAndCatEliminadoFalse(catCodigo);
 		if (!catalogo.isPresent())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -123,7 +123,7 @@ public class CatalogoService {
 	 * @return catalogos hijos
 	 */
 	public List<Catalogo> findByTipoCatalogoId(List<Long> ids) {
-		List<Catalogo> catalogos = catalogoRepository.findByCatIdIn(ids);
+		List<Catalogo> catalogos = catalogoRepository.findByCatIdInAndCatEliminadoFalse(ids);
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),

@@ -78,7 +78,7 @@ public class AgrupacionService {
 	 * @return lista
 	 */
 	public List<Long> findIdAgrupacionByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByTipoCatalogo_tipocatId(id);
+		List<Agrupacion> catalogos = agrupacionRepository.findByTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(id);
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -98,7 +98,7 @@ public class AgrupacionService {
 	 * @return lista: Liste recuperada en base a los parámetros
 	 */
 	public List<Long> findFirstLevelByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadreAndTipoCatalogo_tipocatId(0L, id);
+		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadreAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(0L, id);
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -117,7 +117,7 @@ public class AgrupacionService {
 	 * @return lista: Todos los registros por segundo nivel de busqueda
 	 */
 	public List<Long> findSecondLevelByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadreNotAndTipoCatalogo_tipocatId(0L, id);// .findAll();
+		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadreNotAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(0L, id);// .findAll();
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -137,7 +137,7 @@ public class AgrupacionService {
 	 * @return lista: Listado de catalogos hijos
 	 */
 	public List<Long> findIdAgrupacionByCatalogoPadre(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadre(id);
+		List<Agrupacion> catalogos = agrupacionRepository.findByCatalogoPadre(id);
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),

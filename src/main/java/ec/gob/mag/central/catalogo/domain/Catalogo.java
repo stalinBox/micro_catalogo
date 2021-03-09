@@ -96,11 +96,17 @@ public class Catalogo implements Serializable {
 	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
-	@ApiModelProperty(value = " Estado de catalogo", notes = "***", position = 10)
+	@ApiModelProperty(value = " Estado de catalogo", notes = "***")
 	@Column(name = "estado", length = 2)
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+	
+	@ApiModelProperty(value = "Eliminado logico", notes = "***")
+	@Column(name = "cat_eliminado")
+	@JsonProperty("catEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean catEliminado;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "agr_id")

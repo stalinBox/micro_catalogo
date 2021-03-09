@@ -13,13 +13,13 @@ public interface CatalogoRepository extends CrudRepository<Catalogo, Long> {
 
 	List<Catalogo> findAll();
 
-	List<Catalogo> findByCatIdIn(List<Long> catId);
+	List<Catalogo> findByCatIdInAndCatEliminadoFalse(List<Long> catId);
 
 	Optional<Catalogo> findByCatId(Integer catId);
 
-	Optional<Catalogo> findByCatCodigo(String catCodigo);
+	Optional<Catalogo> findByCatCodigoAndCatEliminadoFalse(String catCodigo);
 
-	Optional<Catalogo> findByIdAnterior(Long idAnterior);
+	Optional<Catalogo> findByIdAnteriorAndCatEliminadoFalse(Long idAnterior);
 
 	@SuppressWarnings("unchecked")
 	Catalogo save(Catalogo catalogo);

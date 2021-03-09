@@ -77,11 +77,17 @@ public class Agrupacion implements Serializable {
 	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
-	@ApiModelProperty(value = " Estado de agrupacion", notes = "***", position = 10)
+	@ApiModelProperty(value = " Estado de agrupacion")
 	@Column(name = "estado", length = 2)
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+	
+	@ApiModelProperty(value = "Eliminado logico")
+	@Column(name = "agr_eliminado")
+	@JsonProperty("agrEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean agrEliminado;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tipcat_id", insertable = false, updatable = false)

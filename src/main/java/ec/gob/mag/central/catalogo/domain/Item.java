@@ -78,6 +78,13 @@ public class Item implements java.io.Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private String estado;
+	
+	
+	@ApiModelProperty(value = "Eliminado logico", notes = "***")
+	@Column(name = "ite_eliminado")
+	@JsonProperty("iteEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean iteEliminado;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cat_id")

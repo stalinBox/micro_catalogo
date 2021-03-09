@@ -170,10 +170,10 @@ public class MicroCatalogoController implements ErrorController {
 	}
 
 	/**
-	 * Controller para buscar un catalogo hijo por un catalogo padre
+	 * Controller para buscar un catalogo por id
 	 * 
 	 * @param id: Identificador del catalogo
-	 * @return catalogos: Retorna los catalogos hijosF
+	 * @return catalogo
 	 */
 	@RequestMapping(value = "/catalogo/findByCatCodigo/{catCodigo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene un catalogo por cat Codigo", response = Catalogo.class)
@@ -186,10 +186,10 @@ public class MicroCatalogoController implements ErrorController {
 	}
 
 	/**
-	 * Controller para buscar un catalogo hijo por un catalogo padre
+	 * Controller para buscar un catalogo por id anterior
 	 * 
-	 * @param id: Identificador del catalogo
-	 * @return catalogos: Retorna los catalogos hijosF
+	 * @param id: Identificador del catalogo anterior
+	 * @return catalogo
 	 */
 	@RequestMapping(value = "/catalogo/findByIdAnterior/{idanterior}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene un catalogo por id anterior", response = Catalogo.class)

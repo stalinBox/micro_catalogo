@@ -1,6 +1,8 @@
 package ec.gob.mag.central.catalogo.repository;
 
 import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,10 +14,11 @@ public interface AgrupacionRepository extends CrudRepository<Agrupacion, Long> {
 	List<Agrupacion> findAll();
 
 	List<Agrupacion> findByAgrId(Long agrId);
+	
+	List<Agrupacion> findByTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(Long tipocatId);
 
-	List<Agrupacion> findByTipoCatalogo_tipocatId(Long tipocatId);
-
-	List<Agrupacion> findByCatIdPadre(Long catPadre);
+	@Query("SELECT a FROM Agrupacion a JOIN Catalogo c ON a.catIdPadre = c.catId WHERE a.catIdPadre = ?1 AND a.agrEliminado = false AND c.catEliminado = false")
+	List<Agrupacion> findByCatalogoPadre(Long catPadre);
 
 	List<Agrupacion> findByCatIdHijo(Long catHijo);
 
@@ -24,8 +27,8 @@ public interface AgrupacionRepository extends CrudRepository<Agrupacion, Long> {
 
 	void deleteByagrId(Integer agrId);
 
-	List<Agrupacion> findByCatIdPadreAndTipoCatalogo_tipocatId(Long catIdPadre, Long tipocatId);
+	List<Agrupacion> findByCatIdPadreAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(Long catIdPadre, Long tipocatId);
 
-	List<Agrupacion> findByCatIdPadreNotAndTipoCatalogo_tipocatId(Long catIdPadre, Long tipocatId);
+	List<Agrupacion> findByCatIdPadreNotAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(Long catIdPadre, Long tipocatId);
 
 }

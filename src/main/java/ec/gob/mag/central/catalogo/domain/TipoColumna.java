@@ -46,14 +46,14 @@ public class TipoColumna implements Serializable {
 
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Tipo Columna")
 	@Id
-	@Column(name = "tipoColumna_id", unique = true)
+	@Column(name = "tipcol_id", unique = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("tipoColumnaId")
 	@JsonInclude(Include.NON_NULL)
 	private Long tipoColumnaId;
 
 	@ApiModelProperty(value = "Nombre de Tipo Columna")
-	@JoinColumn(name = "tipoColumna_Nombre")
+	@JoinColumn(name = "tipcol_nombre")
 	@JsonProperty("tipoColumnaNombre")
 	@JsonInclude(Include.NON_NULL)
 	private String tipoColumnaNombre;
@@ -71,6 +71,12 @@ public class TipoColumna implements Serializable {
 	@JsonProperty("estado")
 	@JsonInclude(Include.NON_NULL)
 	private Long estado;
+	
+	@ApiModelProperty(value = "Eliminado logico", notes = "***")
+	@Column(name = "tipcol_eliminado")
+	@JsonProperty("tipoColumnaEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean tipoColumnaEliminado;
 
 	@PrePersist
 	public void prePersist() {

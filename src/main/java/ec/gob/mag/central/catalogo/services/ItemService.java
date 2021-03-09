@@ -37,7 +37,7 @@ public class ItemService {
 	 * @return items: Retorna la cobertura en base al párametro de entrada
 	 */
 	public List<Item> findByCatalogoId(Long id) {
-		List<Item> items = itemRepository.findByCatalogo_catId(id);
+		List<Item> items = itemRepository.findByCatalogo_catIdAndCatalogo_catEliminadoFalseAndIteEliminadoFalse(id);
 		if (items.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),

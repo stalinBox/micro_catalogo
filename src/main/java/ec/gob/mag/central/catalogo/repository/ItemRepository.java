@@ -17,7 +17,7 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 	@SuppressWarnings("unchecked")
 	Item save(Item item);
 
-	List<Item> findByCatalogo_catId(Long catId);
+	List<Item> findByCatalogo_catIdAndCatalogo_catEliminadoFalseAndIteEliminadoFalse(Long catId);
 
 	void deleteByIteId(Integer itemId);
 
