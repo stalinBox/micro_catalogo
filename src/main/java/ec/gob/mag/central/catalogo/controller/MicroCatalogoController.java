@@ -144,7 +144,6 @@ public class MicroCatalogoController implements ErrorController {
 	 * @param id: Identificador del catalogo
 	 * @return catalogos: Retorna los catalogos hijosF
 	 */
-	@Deprecated
 	@RequestMapping(value = "/catalogo/findByIdCatalogo/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)

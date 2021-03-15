@@ -15,9 +15,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
@@ -52,7 +50,6 @@ public class Origen implements Serializable {
 	@ApiModelProperty(value = "Nombre del Origen")
 	@Column(name = "ori_nombre")
 	@JsonProperty("oriNombre")
-	@JsonInclude(Include.NON_NULL)
 	private String oriNombre;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
@@ -60,20 +57,22 @@ public class Origen implements Serializable {
 	@UpdateTimestamp
 	@Column(name = "time_stamp")
 	@JsonProperty("timeStamp")
-	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
 	@ApiModelProperty(value = " Estado de tipo catalogo", notes = "***", position = 10)
 	@Column(name = "estado", length = 2)
 	@JsonProperty("estado")
-	@JsonInclude(Include.NON_NULL)
 	private String estado;
-	
+
 	@ApiModelProperty(value = "Eliminado logico", notes = "***")
 	@Column(name = "ori_eliminado")
 	@JsonProperty("oriEliminado")
-	@JsonInclude(Include.NON_NULL)
 	private Boolean oriEliminado;
+
+	@ApiModelProperty(value = "Estado del registro", notes = "***")
+	@Column(name = "ori_estado")
+	@JsonProperty("oriEstado")
+	private Integer oriEstado;
 
 	@PrePersist
 	public void prePersist() {

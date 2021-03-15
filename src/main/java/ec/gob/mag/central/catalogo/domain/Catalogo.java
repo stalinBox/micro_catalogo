@@ -20,9 +20,7 @@ import javax.persistence.TemporalType;
 
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.UpdateTimestamp;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,37 +53,31 @@ public class Catalogo implements Serializable {
 	@ApiModelProperty(value = "Nombre del Catalogo")
 	@Column(name = "cat_nombre", nullable = false)
 	@JsonProperty("catNombre")
-	@JsonInclude(Include.NON_NULL)
 	private String catNombre;
 
 	@ApiModelProperty(value = "Descripcion del Catalogo")
 	@Column(name = "cat_descripcion", nullable = false)
 	@JsonProperty("catDescripcion")
-	@JsonInclude(Include.NON_NULL)
 	private String catDescripcion;
 
 	@ApiModelProperty(value = "Abreviatura del Catalogo")
 	@Column(name = "cat_abreviatura", nullable = false)
 	@JsonProperty("catAbreviatura")
-	@JsonInclude(Include.NON_NULL)
 	private String catAbreviatura;
 
 	@ApiModelProperty(value = "Identificativo del Catalogo")
 	@Column(name = "cat_identificativo", nullable = false)
 	@JsonProperty("catIdentificativo")
-	@JsonInclude(Include.NON_NULL)
 	private String catIdentificativo;
 
 	@ApiModelProperty(value = "Codigo Catalogo")
 	@Column(name = "cat_codigo", nullable = false)
 	@JsonProperty("catCodigo")
-	@JsonInclude(Include.NON_NULL)
 	private String catCodigo;
 
 	@ApiModelProperty(value = "Id padre del registro")
 	@Column(name = "id_anterior")
 	@JsonProperty("idAnterior")
-	@JsonInclude(Include.NON_NULL)
 	private Long idAnterior;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
@@ -93,25 +85,26 @@ public class Catalogo implements Serializable {
 	@UpdateTimestamp
 	@Column(name = "time_stamp")
 	@JsonProperty("timeStamp")
-	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
 	@ApiModelProperty(value = " Estado de catalogo", notes = "***")
 	@Column(name = "estado", length = 2)
 	@JsonProperty("estado")
-	@JsonInclude(Include.NON_NULL)
 	private String estado;
-	
+
 	@ApiModelProperty(value = "Eliminado logico", notes = "***")
 	@Column(name = "cat_eliminado")
 	@JsonProperty("catEliminado")
-	@JsonInclude(Include.NON_NULL)
 	private Boolean catEliminado;
+
+	@ApiModelProperty(value = "Estado del registro")
+	@Column(name = "cat_estado")
+	@JsonProperty("catEstado")
+	private Integer catEstado;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "agr_id")
 	@JsonProperty("agrupacion")
-	@JsonInclude(Include.NON_NULL)
 	private List<Agrupacion> agrupacion;
 
 	@PrePersist

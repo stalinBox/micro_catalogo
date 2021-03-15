@@ -18,9 +18,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import ec.gob.mag.central.catalogo.util.Util;
@@ -60,13 +58,11 @@ public class Agrupacion implements Serializable {
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
 	@Column(name = "cat_id_padre", nullable = false)
 	@JsonProperty("catIdPadre")
-	@JsonInclude(Include.NON_NULL)
 	private Long catIdPadre;
 
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
 	@Column(name = "cat_id_hijo", nullable = false)
 	@JsonProperty("catIdHijo")
-	@JsonInclude(Include.NON_NULL)
 	private Long catIdHijo;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
@@ -74,35 +70,35 @@ public class Agrupacion implements Serializable {
 	@UpdateTimestamp
 	@Column(name = "time_stamp")
 	@JsonProperty("timeStamp")
-	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
 	@ApiModelProperty(value = " Estado de agrupacion")
 	@Column(name = "estado", length = 2)
 	@JsonProperty("estado")
-	@JsonInclude(Include.NON_NULL)
 	private String estado;
-	
+
 	@ApiModelProperty(value = "Eliminado logico")
 	@Column(name = "agr_eliminado")
 	@JsonProperty("agrEliminado")
-	@JsonInclude(Include.NON_NULL)
 	private Boolean agrEliminado;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "tipcat_id", insertable = false, updatable = false)
-	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
-	@JsonProperty("tipoCatalogo")
-	@JsonInclude(Include.NON_NULL)
-	@JsonManagedReference
-	private TipoCatalogo tipoCatalogo;
+	@ApiModelProperty(value = "Estado del campo")
+	@Column(name = "agr_estado")
+	@JsonProperty("agrEstado")
+	private Integer agrEstado;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ori_id")
 	@ApiModelProperty(value = " Clave foránea de la tabla Origen", notes = "***")
 	@JsonProperty("origen")
-	@JsonInclude(Include.NON_NULL)
 	private Origen origen;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "tipcat_id", insertable = false, updatable = false)
+	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
+	@JsonProperty("tipoCatalogo")
+	@JsonManagedReference
+	private TipoCatalogo tipoCatalogo;
 
 	@PrePersist
 	public void prePersist() {

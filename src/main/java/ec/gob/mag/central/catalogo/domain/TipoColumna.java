@@ -15,10 +15,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,18 +42,16 @@ import lombok.ToString;
 public class TipoColumna implements Serializable {
 	private static final long serialVersionUID = -3124864204002344027L;
 
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Tipo Columna")
 	@Id
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Tipo Columna")
 	@Column(name = "tipcol_id", unique = true)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty("tipoColumnaId")
-	@JsonInclude(Include.NON_NULL)
 	private Long tipoColumnaId;
 
 	@ApiModelProperty(value = "Nombre de Tipo Columna")
 	@JoinColumn(name = "tipcol_nombre")
 	@JsonProperty("tipoColumnaNombre")
-	@JsonInclude(Include.NON_NULL)
 	private String tipoColumnaNombre;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
@@ -63,20 +59,22 @@ public class TipoColumna implements Serializable {
 	@UpdateTimestamp
 	@Column(name = "time_stamp")
 	@JsonProperty("timeStamp")
-	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
 	@ApiModelProperty(value = "11=activo  12=inactivo")
 	@Column(name = "estado", nullable = false)
 	@JsonProperty("estado")
-	@JsonInclude(Include.NON_NULL)
 	private Long estado;
-	
+
 	@ApiModelProperty(value = "Eliminado logico", notes = "***")
 	@Column(name = "tipcol_eliminado")
-	@JsonProperty("tipoColumnaEliminado")
-	@JsonInclude(Include.NON_NULL)
-	private Boolean tipoColumnaEliminado;
+	@JsonProperty("tipcolEliminado")
+	private Boolean tipcolEliminado;
+
+	@ApiModelProperty(value = "Estado del registro", notes = "***")
+	@Column(name = "tipcol_estado")
+	@JsonProperty("tipcolEstado")
+	private Integer tipcolEstado;
 
 	@PrePersist
 	public void prePersist() {

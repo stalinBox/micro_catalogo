@@ -16,10 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
@@ -56,13 +54,11 @@ public class Item implements java.io.Serializable {
 	@ApiModelProperty(value = "Nombre del Item")
 	@Column(name = "ite_nombre", nullable = false)
 	@JsonProperty("itemNombre")
-	@JsonInclude(Include.NON_NULL)
 	private String iteNombre;
 
 	@ApiModelProperty(value = "Valor del Item")
 	@Column(name = "ite_valor", nullable = false)
 	@JsonProperty("iteValor")
-	@JsonInclude(Include.NON_NULL)
 	private Float iteValor;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
@@ -70,27 +66,27 @@ public class Item implements java.io.Serializable {
 	@UpdateTimestamp
 	@Column(name = "time_stamp")
 	@JsonProperty("timeStamp")
-	@JsonInclude(Include.NON_NULL)
 	private Date timeStamp;
 
 	@ApiModelProperty(value = " Estado de tipo catalogo", notes = "***", position = 10)
 	@Column(name = "estado", length = 2)
 	@JsonProperty("estado")
-	@JsonInclude(Include.NON_NULL)
 	private String estado;
-	
-	
+
 	@ApiModelProperty(value = "Eliminado logico", notes = "***")
 	@Column(name = "ite_eliminado")
 	@JsonProperty("iteEliminado")
-	@JsonInclude(Include.NON_NULL)
 	private Boolean iteEliminado;
+
+	@ApiModelProperty(value = "Eliminado logico", notes = "***")
+	@Column(name = "ite_estado")
+	@JsonProperty("iteEstado")
+	private Integer iteEstado;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cat_id")
 	@ApiModelProperty(value = " Clave foránea de la tabla Catalogo", notes = "***")
 	@JsonProperty("catalogoTR")
-	@JsonInclude(Include.NON_NULL)
 	@JsonManagedReference
 	private Catalogo catalogo;
 
@@ -98,7 +94,6 @@ public class Item implements java.io.Serializable {
 	@JoinColumn(name = "tipcol_id")
 	@ApiModelProperty(value = " Clave foránea de la tabla Tipo Columna", notes = "***")
 	@JsonProperty("tipoColumna")
-	@JsonInclude(Include.NON_NULL)
 	@JsonBackReference(value = "item-tipoColumna")
 	private TipoColumna tipoColumna;
 

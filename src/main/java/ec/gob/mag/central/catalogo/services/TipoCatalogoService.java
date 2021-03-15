@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ec.gob.mag.central.catalogo.domain.TipoCatalogo;
+import ec.gob.mag.central.catalogo.enums.Constante;
 import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
 import ec.gob.mag.central.catalogo.repository.TipoCatalogoRepository;
 
@@ -51,7 +52,8 @@ public class TipoCatalogoService {
 	 * @return Todos los tipos de catalogos
 	 */
 	public List<TipoCatalogo> findAll() {
-		List<TipoCatalogo> tipos = tipoCatalogoRepository.findAll();
+		List<TipoCatalogo> tipos = tipoCatalogoRepository.findByTipcatEliminadoAndTipcatEstado(false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (tipos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),

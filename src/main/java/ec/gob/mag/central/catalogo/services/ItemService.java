@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.domain.Item;
+import ec.gob.mag.central.catalogo.enums.Constante;
 import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
 import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
 import ec.gob.mag.central.catalogo.repository.ItemRepository;
@@ -37,7 +38,8 @@ public class ItemService {
 	 * @return items: Retorna la cobertura en base al párametro de entrada
 	 */
 	public List<Item> findByCatalogoId(Long id) {
-		List<Item> items = itemRepository.findByCatalogo_catIdAndCatalogo_catEliminadoFalseAndIteEliminadoFalse(id);
+		List<Item> items = itemRepository.findByCatalogo_catIdAndCatalogo_catEliminadoAndCatalogo_catEstado(id, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (items.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),

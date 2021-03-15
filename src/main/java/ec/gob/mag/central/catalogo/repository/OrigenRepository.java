@@ -11,13 +11,11 @@ import ec.gob.mag.central.catalogo.domain.Origen;
 @Repository("origenRepository")
 public interface OrigenRepository extends CrudRepository<Origen, Long> {
 
-	List<Origen> findAll();
+	List<Origen> findByOriEliminadoAndOriEstado(boolean oriEliminado, Integer oriEstado);
 
-	Optional<Origen> findByoriId(Integer oriId);
+	Optional<Origen> findByoriIdAndOriEliminadoAndOriEstado(Integer oriId, boolean oriEliminado, Integer oriEstado);
 
 	@SuppressWarnings("unchecked")
 	Origen save(Origen origen);
-
-	void deleteByoriId(Integer oriId);
 
 }

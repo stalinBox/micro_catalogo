@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import ec.gob.mag.central.catalogo.domain.Agrupacion;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
+import ec.gob.mag.central.catalogo.enums.Constante;
 import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
 import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
 import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
@@ -56,7 +57,8 @@ public class CatalogoService {
 	 *         datos BDC
 	 */
 	public List<Catalogo> findAll() {
-		List<Catalogo> catalogos = catalogoRepository.findAll();
+		List<Catalogo> catalogos = catalogoRepository.findByCatEliminadoAndCatEstado(false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -90,7 +92,8 @@ public class CatalogoService {
 	 *         entrada
 	 */
 	public Optional<Catalogo> findByCatCodigo(String catCodigo) {
-		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigoAndCatEliminadoFalse(catCodigo);
+		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigoAndCatEliminadoAndCatEstado(catCodigo, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (!catalogo.isPresent())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -107,7 +110,8 @@ public class CatalogoService {
 	 *         entrada
 	 */
 	public Optional<Catalogo> findByIdAnterior(Long catCodigo) {
-		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnteriorAndCatEliminadoFalse(catCodigo);
+		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnteriorAndCatEliminadoAndCatEstado(catCodigo, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (!catalogo.isPresent())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -123,13 +127,15 @@ public class CatalogoService {
 	 * @return catalogos hijos
 	 */
 	public List<Catalogo> findByTipoCatalogoId(List<Long> ids) {
-		List<Catalogo> catalogos = catalogoRepository.findByCatIdInAndCatEliminadoFalse(ids);
+		List<Catalogo> catalogos = catalogoRepository.findByCatIdInAndCatEliminadoAndCatEstado(ids, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Catalogo.class.getName()));
 		catalogos.stream().forEach(m -> {
-			List<Agrupacion> agr = agrupacionRepository.findByCatIdHijo(m.getCatId());
+			List<Agrupacion> agr = agrupacionRepository.findByCatIdHijoAndAgrEliminadoAndAgrEstado(m.getCatId(), false,
+					Constante.ESTADO_ACTIVO.getCodigo());
 			m.setAgrupacion(agr);
 		});
 

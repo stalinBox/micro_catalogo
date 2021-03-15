@@ -10,14 +10,15 @@ import ec.gob.mag.central.catalogo.domain.Item;
 @Repository("itemRepository")
 public interface ItemRepository extends CrudRepository<Item, Long> {
 
-	List<Item> findAll();
+	List<Item> findByIteEliminadoAndIteEstado(boolean iteEliminado, Integer iteEstado);
 
-	List<Item> findByIteId(Long catId);
+	List<Item> findByIteIdAndIteEliminadoAndIteEstado(Long catId, boolean iteEliminado, Integer iteEstado);
 
 	@SuppressWarnings("unchecked")
 	Item save(Item item);
 
-	List<Item> findByCatalogo_catIdAndCatalogo_catEliminadoFalseAndIteEliminadoFalse(Long catId);
+	List<Item> findByCatalogo_catIdAndCatalogo_catEliminadoAndCatalogo_catEstado(Long catId, boolean tipocatEliminado,
+			Integer tipcatEstado);
 
 	void deleteByIteId(Integer itemId);
 

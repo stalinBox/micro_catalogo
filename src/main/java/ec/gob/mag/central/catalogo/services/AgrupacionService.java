@@ -11,6 +11,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import ec.gob.mag.central.catalogo.domain.Agrupacion;
+import ec.gob.mag.central.catalogo.enums.Constante;
 import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
 import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
 
@@ -33,7 +34,8 @@ public class AgrupacionService {
 	 *         datos BDC
 	 */
 	public List<Agrupacion> findAll() {
-		List<Agrupacion> catalogos = agrupacionRepository.findAll();
+		List<Agrupacion> catalogos = agrupacionRepository.findByAgrEliminadoAndAgrEstado(false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -63,7 +65,8 @@ public class AgrupacionService {
 	 * @return catalogos: Retorna la agrupacion recuperado de la base de datos BDC
 	 */
 	public List<Agrupacion> findByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findAll();
+		List<Agrupacion> catalogos = agrupacionRepository.findByAgrEliminadoAndAgrEstado(false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -78,7 +81,9 @@ public class AgrupacionService {
 	 * @return lista
 	 */
 	public List<Long> findIdAgrupacionByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(id);
+		List<Agrupacion> catalogos = agrupacionRepository
+				.findByTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
+						id, false, Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -98,7 +103,9 @@ public class AgrupacionService {
 	 * @return lista: Liste recuperada en base a los parámetros
 	 */
 	public List<Long> findFirstLevelByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadreAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(0L, id);
+		List<Agrupacion> catalogos = agrupacionRepository
+				.findByCatIdPadreAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
+						0L, id, false, Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -117,7 +124,9 @@ public class AgrupacionService {
 	 * @return lista: Todos los registros por segundo nivel de busqueda
 	 */
 	public List<Long> findSecondLevelByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdPadreNotAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipocatEliminadoFalseAndAgrEliminadoFalse(0L, id);// .findAll();
+		List<Agrupacion> catalogos = agrupacionRepository
+				.findByCatIdPadreNotAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
+						0L, id, false, Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -137,7 +146,8 @@ public class AgrupacionService {
 	 * @return lista: Listado de catalogos hijos
 	 */
 	public List<Long> findIdAgrupacionByCatalogoPadre(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatalogoPadre(id);
+		List<Agrupacion> catalogos = agrupacionRepository.findByCatalogoPadreAndAgrEliminadoAndAgrEstado(id, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -156,7 +166,8 @@ public class AgrupacionService {
 	 * @return lista: Listado de catalogos hijos
 	 */
 	public List<Long> findcatIdHijo(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdHijo(id);
+		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdHijoAndAgrEliminadoAndAgrEstado(id, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
 			throw new CatalogoNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
