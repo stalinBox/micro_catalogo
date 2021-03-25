@@ -20,6 +20,7 @@ import ec.gob.mag.central.catalogo.services.AgrupacionService;
 import ec.gob.mag.central.catalogo.services.CatalogoService;
 import ec.gob.mag.central.catalogo.services.ItemService;
 import ec.gob.mag.central.catalogo.services.TipoCatalogoService;
+import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
@@ -58,6 +59,10 @@ public class MicroCatalogoController implements ErrorController {
 	@Qualifier("itemservice")
 	private ItemService itemservice;
 
+	@Autowired
+	@Qualifier("util")
+	private Util util;
+
 	/**
 	 * Controller para buscar tipo de catalogo
 	 * 
@@ -71,7 +76,8 @@ public class MicroCatalogoController implements ErrorController {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
 
-		LOGGER.info("/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString());
+		LOGGER.info(
+				"/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
 	}
 
@@ -87,7 +93,8 @@ public class MicroCatalogoController implements ErrorController {
 	public List<Catalogo> firstLevel(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findFirstLevelByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
-		LOGGER.info("/catalogo/findFirtsLevelByIdTipoCatalogo/{id}" + catalogos.toString());
+		LOGGER.info("/catalogo/findFirtsLevelByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: "
+				+ util.filterUsuId(token));
 		return catalogos;
 	}
 
@@ -103,7 +110,8 @@ public class MicroCatalogoController implements ErrorController {
 	public List<Catalogo> secondLevel(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findSecondLevelByTipoCatalogoId(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
-		LOGGER.info("/catalogo/findSecondLevelByIdTipoCatalogo/{id}" + catalogos.toString());
+		LOGGER.info("/catalogo/findSecondLevelByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: "
+				+ util.filterUsuId(token));
 		return catalogos;
 	}
 
@@ -118,7 +126,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Item> getItem(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Item> items = itemservice.findByCatalogoId(id);
-		LOGGER.info("/item/findByCatalogo/{id}" + items.toString());
+		LOGGER.info("/item/findByCatalogo/{id}" + items.toString() + " usuario: " + util.filterUsuId(token));
 		return items;
 	}
 
@@ -134,7 +142,8 @@ public class MicroCatalogoController implements ErrorController {
 	public List<Catalogo> getCatalogoHijo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByCatalogoPadre(id);
 		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
-		LOGGER.info("/catalogo/findByCatalogoPadre/{id}" + catalogos.toString());
+		LOGGER.info(
+				"/catalogo/findByCatalogoPadre/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
 	}
 
@@ -149,7 +158,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public Catalogo finByIdCatalago(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		Catalogo catalogo = catalogoservice.findByCatId(id).get();
-		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString());
+		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogo;
 	}
 
@@ -164,7 +173,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<TipoCatalogo> findAllTipoCatalogo(@RequestHeader(name = "Authorization") String token) {
 		List<TipoCatalogo> tipos = tipoCatalogoService.findTiposCatalogos("RENAGRO");
-		LOGGER.info("/tipoCatalogo/findAll" + tipos.toString());
+		LOGGER.info("/tipoCatalogo/findAll" + tipos.toString() + " usuario: " + util.filterUsuId(token));
 		return tipos;
 	}
 
@@ -180,7 +189,7 @@ public class MicroCatalogoController implements ErrorController {
 	public Catalogo finByCatCodigoCatalago(@PathVariable String catCodigo,
 			@RequestHeader(name = "Authorization") String token) {
 		Catalogo catalogo = catalogoservice.findByCatCodigo(catCodigo).get();
-		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString());
+		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogo;
 	}
 
@@ -196,7 +205,8 @@ public class MicroCatalogoController implements ErrorController {
 	public Catalogo findByIdAnterior(@PathVariable Long idanterior,
 			@RequestHeader(name = "Authorization") String token) {
 		Catalogo catalogo = catalogoservice.findByIdAnterior(idanterior).get();
-		LOGGER.info("/catalogo/findByIdAnterior/{idanterior}" + catalogo.toString());
+		LOGGER.info("/catalogo/findByIdAnterior/{idanterior}" + catalogo.toString() + " usuario: "
+				+ util.filterUsuId(token));
 		return catalogo;
 	}
 
