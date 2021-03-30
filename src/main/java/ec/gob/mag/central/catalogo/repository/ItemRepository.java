@@ -20,6 +20,4 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 	List<Item> findByCatalogo_catIdAndCatalogo_catEliminadoAndCatalogo_catEstado(Long catId, boolean tipocatEliminado,
 			Integer tipcatEstado);
 
-	void deleteByIteId(Integer itemId);
-
 }
