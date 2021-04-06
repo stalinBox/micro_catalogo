@@ -1,7 +1,6 @@
 package ec.gob.mag.central.catalogo.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +9,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import ec.gob.mag.central.catalogo.domain.TipoCatalogo;
-import ec.gob.mag.central.catalogo.enums.Constante;
-import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
+import ec.gob.mag.central.catalogo.exception.MyNotFoundException;
 import ec.gob.mag.central.catalogo.repository.TipoCatalogoRepository;
 
-/**
- * @author PITPPA
- * @version FINAL
- */
 @Service("tipoCatalogoService")
 public class TipoCatalogoService {
+
 	@Autowired
 	@Qualifier("tipoCatalogoRepository")
 	private TipoCatalogoRepository tipoCatalogoRepository;
@@ -51,16 +44,16 @@ public class TipoCatalogoService {
 	 * 
 	 * @return Todos los tipos de catalogos
 	 */
-	public List<TipoCatalogo> findAll() {
-		List<TipoCatalogo> tipos = tipoCatalogoRepository.findByTipcatEliminadoAndTipcatEstado(false,
-				Constante.ESTADO_ACTIVO.getCodigo());
-		if (tipos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					this.getClass().getName()));
-
-		return tipos;
-	}
+//	public List<TipoCatalogo> findAll() {
+//		List<TipoCatalogo> tipos = tipoCatalogoRepository.findByTipcatEliminadoAndTipcatEstado(false,
+//				Constante.ESTADO_ACTIVO.getCodigo());
+//		if (tipos.isEmpty())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					this.getClass().getName()));
+//
+//		return tipos;
+//	}
 
 	/**
 	 * Servicio para encontrar todos los tipos de catalogos, excepto los que
@@ -68,11 +61,10 @@ public class TipoCatalogoService {
 	 * 
 	 * @return Todos los tipos de catalogos excepto los que continenen un nombre
 	 */
-	@JsonIgnore
 	public List<TipoCatalogo> findTiposCatalogos(String nombre) {
 		List<TipoCatalogo> tipos = tipoCatalogoRepository.findTiposCatalogos(nombre);
 		if (tipos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
 		clearListLazyVariables(tipos);
@@ -86,13 +78,13 @@ public class TipoCatalogoService {
 	 * @return catalogo: Retorna todos los catalogos filtrados por el parámetros de
 	 *         entrada
 	 */
-	public Optional<TipoCatalogo> findById(Long tipCatId) {
-		Optional<TipoCatalogo> tipo = tipoCatalogoRepository.findById(tipCatId);
-		if (!tipo.isPresent())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					tipCatId));
-		return tipo;
-	}
+//	public Optional<TipoCatalogo> findById(Long tipCatId) {
+//		Optional<TipoCatalogo> tipo = tipoCatalogoRepository.findById(tipCatId);
+//		if (!tipo.isPresent())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					tipCatId));
+//		return tipo;
+//	}
 
 }

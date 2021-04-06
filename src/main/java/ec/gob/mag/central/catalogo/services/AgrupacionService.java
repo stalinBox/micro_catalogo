@@ -2,7 +2,6 @@ package ec.gob.mag.central.catalogo.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,20 +11,34 @@ import org.springframework.stereotype.Service;
 
 import ec.gob.mag.central.catalogo.domain.Agrupacion;
 import ec.gob.mag.central.catalogo.enums.Constante;
-import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
+import ec.gob.mag.central.catalogo.exception.MyNotFoundException;
 import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
 
-/**
- * @author PITPPA
- * @version FINAL
- */
 @Service("agrupacionService")
 public class AgrupacionService {
+
 	@Autowired
 	@Qualifier("agrupacionRepository")
 	private AgrupacionRepository agrupacionRepository;
+
 	@Autowired
 	private MessageSource messageSource;
+
+//	public void clearObjectLazyVariables(Catalogo usuario) {
+//		usuario.getAgrupacion().stream().map(u -> {
+//			u.getTipoCatalogo().setAgrupacion(null);
+//			return u;
+//		}).collect(Collectors.toList());
+//	}
+//
+//	public List<Catalogo> clearListLazyVariables(List<Catalogo> usuarios) {
+//		if (usuarios != null)
+//			usuarios = usuarios.stream().map(u -> {
+//				clearObjectLazyVariables(u);
+//				return u;
+//			}).collect(Collectors.toList());
+//		return usuarios;
+//	}
 
 	/**
 	 * Servicio para encontrar todos los registros de la tabla agrupación
@@ -37,7 +50,7 @@ public class AgrupacionService {
 		List<Agrupacion> catalogos = agrupacionRepository.findByAgrEliminadoAndAgrEstado(false,
 				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Agrupacion.class.getName()));
 		return catalogos;
@@ -49,14 +62,14 @@ public class AgrupacionService {
 	 * @param cobId: Identificador del catalogo a actualizar
 	 * @return catalogo: retorna el regitro actualizado
 	 */
-	public Optional<Agrupacion> findByCobId(Long cobId) {
-		Optional<Agrupacion> catalogo = agrupacionRepository.findById(cobId);
-		if (!catalogo.isPresent())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_not_exist.message", null, LocaleContextHolder.getLocale()),
-					cobId));
-		return catalogo;
-	}
+//	public Optional<Agrupacion> findByCobId(Long cobId) {
+//		Optional<Agrupacion> catalogo = agrupacionRepository.findById(cobId);
+//		if (!catalogo.isPresent())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_not_exist.message", null, LocaleContextHolder.getLocale()),
+//					cobId));
+//		return catalogo;
+//	}
 
 	/**
 	 * Servicio para buscar por identificador de agrupación
@@ -64,15 +77,15 @@ public class AgrupacionService {
 	 * @param id: Identificador de la agrupación
 	 * @return catalogos: Retorna la agrupacion recuperado de la base de datos BDC
 	 */
-	public List<Agrupacion> findByTipoCatalogoId(Long id) {
-		List<Agrupacion> catalogos = agrupacionRepository.findByAgrEliminadoAndAgrEstado(false,
-				Constante.ESTADO_ACTIVO.getCodigo());
-		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					Agrupacion.class.getName()));
-		return catalogos;
-	}
+//	public List<Agrupacion> findByTipoCatalogoId(Long id) {
+//		List<Agrupacion> catalogos = agrupacionRepository.findByAgrEliminadoAndAgrEstado(false,
+//				Constante.ESTADO_ACTIVO.getCodigo());
+//		if (catalogos.isEmpty())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					Agrupacion.class.getName()));
+//		return catalogos;
+//	}
 
 	/**
 	 * Servicio para buscar por id de agrupación
@@ -85,7 +98,7 @@ public class AgrupacionService {
 				.findByTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
 						id, false, Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
 
@@ -107,7 +120,7 @@ public class AgrupacionService {
 				.findByCatIdPadreAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
 						0L, id, false, Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
 		List<Long> lista = new ArrayList<>();
@@ -128,7 +141,7 @@ public class AgrupacionService {
 				.findByCatIdPadreNotAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
 						0L, id, false, Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
 
@@ -149,7 +162,7 @@ public class AgrupacionService {
 		List<Agrupacion> catalogos = agrupacionRepository.findByCatalogoPadreAndAgrEliminadoAndAgrEstado(id, false,
 				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
 		List<Long> lista = new ArrayList<>();
@@ -169,7 +182,7 @@ public class AgrupacionService {
 		List<Agrupacion> catalogos = agrupacionRepository.findByCatIdHijoAndAgrEliminadoAndAgrEstado(id, false,
 				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
 		List<Long> lista = new ArrayList<>();
@@ -179,22 +192,4 @@ public class AgrupacionService {
 		return lista;
 	}
 
-	/**
-	 * Servicio para guardar una agrupación
-	 * 
-	 * @param catalogo
-	 * @return La agrupación creada
-	 */
-	public Agrupacion save(Agrupacion catalogo) {
-		return agrupacionRepository.save(catalogo);
-	}
-
-	/**
-	 * Servicio para eliminar un catalogo
-	 * 
-	 * @param CobId
-	 */
-	public void deleteById(Long cobId) {
-		agrupacionRepository.deleteById(cobId);
-	}
 }

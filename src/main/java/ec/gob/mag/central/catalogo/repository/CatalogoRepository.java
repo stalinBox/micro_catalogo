@@ -11,20 +11,15 @@ import ec.gob.mag.central.catalogo.domain.Catalogo;
 @Repository("catalogoRepository")
 public interface CatalogoRepository extends CrudRepository<Catalogo, Long> {
 
-	List<Catalogo> findByCatEliminadoAndCatEstado(boolean tipocatEliminado, Integer tipcatEstado);
+	List<Catalogo> findByCatEliminadoAndCatEstadoEquals(boolean catEliminado, Integer catEstado);
 
-	List<Catalogo> findByCatIdInAndCatEliminadoAndCatEstado(List<Long> catId, boolean tipocatEliminado,
+	Optional<Catalogo> findByCatCodigoAndAgrupacion_TipoCatalogo_tipocatIdAndCatEliminadoAndCatEstadoEquals(String id,
+			Long tipCatId, boolean catEliminado, Integer catEstado);
+
+//	List<Catalogo> findByCatCodigoInAndCatEliminadoAndCatEstado(List<String> catCodigo, boolean tipocatEliminado,
+//			Integer tipcatEstado);
+
+	List<Catalogo> findByCatIdInAndCatEliminadoAndCatEstado(List<Long> catCodigo, boolean tipocatEliminado,
 			Integer tipcatEstado);
 
-	Optional<Catalogo> findByCatIdAndCatEliminadoAndCatEstado(Integer catId, boolean tipocatEliminado,
-			Integer tipcatEstado);
-
-	Optional<Catalogo> findByCatCodigoAndCatEliminadoAndCatEstado(String catCodigo, boolean tipocatEliminado,
-			Integer tipcatEstado);
-
-	Optional<Catalogo> findByIdAnteriorAndCatEliminadoAndCatEstado(Long idAnterior, boolean tipocatEliminado,
-			Integer tipcatEstado);
-
-	@SuppressWarnings("unchecked")
-	Catalogo save(Catalogo catalogo);
 }

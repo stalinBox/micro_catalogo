@@ -11,10 +11,13 @@ import ec.gob.mag.central.catalogo.domain.Agrupacion;
 @Repository("agrupacionRepository")
 public interface AgrupacionRepository extends CrudRepository<Agrupacion, Long> {
 
-	List<Agrupacion> findByAgrEliminadoAndAgrEstado(boolean agrEliminado, Integer agrEstado);
+	// FindAll
+	List<Agrupacion> findByAgrEliminadoAndAgrEstado(boolean catEliminado, Integer catEstado);
 
-	List<Agrupacion> findByAgrIdAndAgrEliminadoAndAgrEstado(Long agrId, boolean agrEliminado, Integer agrEstado);
+//	Optional<Catalogo> findByAgrIdAndAgrEliminadoAndAgrEstadoEquals(Long id, boolean catEliminado, Integer catEstado);
+//	List<Agrupacion> findByAgrIdAndAgrEliminadoAndAgrEstadoEquals(Long agrId, boolean agrEliminado, Integer agrEstado);
 
+	// Id del tipo catalogo
 	List<Agrupacion> findByTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
 			Long tipocatId, boolean tipocatEliminado, Integer tipcatEstado, boolean agrEliminado, Integer agrEstado);
 
@@ -23,17 +26,17 @@ public interface AgrupacionRepository extends CrudRepository<Agrupacion, Long> {
 	List<Agrupacion> findByCatalogoPadreAndAgrEliminadoAndAgrEstado(Long catPadre, boolean agrEliminado,
 			Integer agrEstado);
 
+	// CatIdHijo
 	List<Agrupacion> findByCatIdHijoAndAgrEliminadoAndAgrEstado(Long catHijo, boolean agrEliminado, Integer agrEstado);
 
+	// CatIdPadre - tipocatId
 	List<Agrupacion> findByCatIdPadreAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
 			Long catIdPadre, Long tipocatId, boolean tipocatEliminado, Integer tipcatEstado, boolean agrEliminado,
 			Integer agrEstado);
 
+	// CatIdPadre - tipocatId
 	List<Agrupacion> findByCatIdPadreNotAndTipoCatalogo_tipocatIdAndTipoCatalogo_tipcatEliminadoAndTipoCatalogo_TipcatEstadoAndAgrEliminadoAndAgrEstado(
 			Long catIdPadre, Long tipocatId, boolean tipocatEliminado, Integer tipcatEstado, boolean agrEliminado,
 			Integer agrEstado);
-
-	@SuppressWarnings("unchecked")
-	Agrupacion save(Agrupacion agrupacion);
 
 }

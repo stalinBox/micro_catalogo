@@ -1,6 +1,5 @@
 package ec.gob.mag.central.catalogo.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,41 +11,34 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.UpdateTimestamp;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
-//============== LOMBOK =============
 
-@Getter
-@Setter
 @ToString(of = "agrId")
 @EqualsAndHashCode(of = "agrId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-//========== JPA ======================
-
 @Entity
 @Table(name = "tbl_agrupacion", schema = "sc_catalogos")
-public class Agrupacion implements Serializable {
-	private static final long serialVersionUID = -4017650183258693515L;
+public class Agrupacion {
 
 	@Id
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla agrupacion")
@@ -60,32 +52,14 @@ public class Agrupacion implements Serializable {
 	@JsonProperty("catIdPadre")
 	private Long catIdPadre;
 
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
+	@ApiModelProperty(value = "Este campo es la clave primaria de la tabla Catalogo")
 	@Column(name = "cat_id_hijo", nullable = false)
 	@JsonProperty("catIdHijo")
 	private Long catIdHijo;
 
-	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
-	@Temporal(TemporalType.TIMESTAMP)
-	@UpdateTimestamp
-	@Column(name = "time_stamp")
-	@JsonProperty("timeStamp")
-	private Date timeStamp;
-
-	@ApiModelProperty(value = " Estado de agrupacion")
-	@Column(name = "estado", length = 2)
-	@JsonProperty("estado")
-	private String estado;
-
-	@ApiModelProperty(value = "Eliminado logico")
-	@Column(name = "agr_eliminado")
-	@JsonProperty("agrEliminado")
-	private Boolean agrEliminado;
-
-	@ApiModelProperty(value = "Estado del campo")
-	@Column(name = "agr_estado")
-	@JsonProperty("agrEstado")
-	private Integer agrEstado;
+	/******************************************************
+	 * SECCION - RELACIONES JPA
+	 ******************************************************/
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ori_id")
@@ -100,9 +74,56 @@ public class Agrupacion implements Serializable {
 	@JsonManagedReference
 	private TipoCatalogo tipoCatalogo;
 
+	/*****************************************************
+	 * SECCION - CAMPOS POR DEFECTO EN TODAS LAS ENTIDADES
+	 *****************************************************/
+	@ApiModelProperty(value = "11=activo  12=inactivo", required = true, allowableValues = "11=>activo, 12=>inactivo", example = "11")
+	@Column(name = "agr_estado", columnDefinition = "Integer default 11")
+	@JsonProperty("agrEstado")
+	@JsonInclude(Include.NON_NULL)
+	private Integer agrEstado;
+
+	@ApiModelProperty(value = "Fecha de registro del campo", example = "")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "agr_reg_fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@JsonProperty("agrRegFecha")
+	@JsonInclude(Include.NON_NULL)
+	private Date agrRegFecha;
+
+	@ApiModelProperty(value = "Id de usuario que creó el regristro", example = "")
+	@Column(name = "agr_reg_usu", nullable = false)
+	@JsonProperty("agrRegUsu")
+	@JsonInclude(Include.NON_NULL)
+	@NotNull(message = "_error.validation_blank.message")
+	private Integer agrRegUsu;
+
+	@ApiModelProperty(value = "Fecha en la que hizo la actualización del registro", example = "")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "agr_act_fecha")
+	@JsonProperty("agrActFecha")
+	@JsonInclude(Include.NON_NULL)
+	private Date agrActFecha;
+
+	@ApiModelProperty(value = "Id de usuario que actualizacio del campo", example = "")
+	@Column(name = "agr_act_usu")
+	@JsonProperty("agrActUsu")
+	private Integer agrActUsu;
+
+	@ApiModelProperty(value = "Este campo almacena los valores f =false para eliminado logico  y t= true para indicar que está activo", required = true, allowableValues = "false=>no eliminado lógico, true=> eliminado lógico", example = "")
+	@Column(name = "agr_eliminado", columnDefinition = "boolean default false")
+	@JsonProperty("agrEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean agrEliminado;
+
 	@PrePersist
-	public void prePersist() {
-		this.timeStamp = Util.dateNow();
-		this.estado = "ac";
+	void prePersist() {
+		this.agrEstado = 11;
+		this.agrEliminado = false;
+		this.agrRegFecha = new Date();
+	}
+
+	@PreUpdate
+	void preUpdate() {
+		this.agrActFecha = new Date();
 	}
 }

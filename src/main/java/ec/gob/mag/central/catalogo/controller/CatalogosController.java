@@ -4,9 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,32 +26,35 @@ import ec.gob.mag.central.catalogo.services.AgrupacionService;
 import ec.gob.mag.central.catalogo.services.CatalogoService;
 import ec.gob.mag.central.catalogo.services.ItemService;
 import ec.gob.mag.central.catalogo.services.TipoCatalogoService;
+import ec.gob.mag.central.catalogo.util.ResponseController;
 import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.swagger.annotations.ApiResponse;
 
-/**
- * @author PITPPA
- * @version FINAL
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Agrupacion", description = "Rest Api example", tags = "CATALOGO_RNA")
+@Api(value = "Rest Api example", tags = "CATALOGO")
 @ApiResponses(value = { @ApiResponse(code = 200, message = "Objeto recuperado"),
-		@ApiResponse(code = 201, message = "Objeto creado"),
-		@ApiResponse(code = 404, message = "Recurso no encontrado") })
-public class MicroCatalogoController implements ErrorController {
+		@ApiResponse(code = 200, message = "SUCESS"), @ApiResponse(code = 404, message = "RESOURCE NOT FOUND"),
+		@ApiResponse(code = 400, message = "BAD REQUEST"), @ApiResponse(code = 201, message = "CREATED"),
+		@ApiResponse(code = 401, message = "UNAUTHORIZED"),
+		@ApiResponse(code = 415, message = "UNSUPPORTED TYPE - Representation not supported for the resource"),
+		@ApiResponse(code = 500, message = "SERVER ERROR") })
+public class CatalogosController implements ErrorController {
 	private static final String PATH = "/error";
+	public static final Logger LOGGER = LoggerFactory.getLogger(CatalogosController.class);
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(MicroCatalogoController.class);
 	@Autowired
-	@Qualifier("catalogoservice")
-	private CatalogoService catalogoservice;
+	@Qualifier("catalogoService")
+	private CatalogoService catalogoService;
+
+	@Autowired
+	@Qualifier("responseController")
+	private ResponseController responseController;
 
 	@Autowired
 	@Qualifier("agrupacionService")
@@ -56,8 +65,8 @@ public class MicroCatalogoController implements ErrorController {
 	private TipoCatalogoService tipoCatalogoService;
 
 	@Autowired
-	@Qualifier("itemservice")
-	private ItemService itemservice;
+	@Qualifier("itemService")
+	private ItemService itemService;
 
 	@Autowired
 	@Qualifier("util")
@@ -74,15 +83,14 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Catalogo> getCatalogo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
-		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
-
+		List<Catalogo> catalogos = catalogoService.findByTipoCatalogoId(agrupacion);
 		LOGGER.info(
 				"/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
 	}
 
 	/**
-	 * Controller para buscar por el primer nivel en base al tipo de catalogo
+	 * Controller para buscar por el CAT ID PADRE de la tabla agrupacion
 	 * 
 	 * @param id: Identificador del catalogo
 	 * @return catalogos
@@ -92,14 +100,14 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Catalogo> firstLevel(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findFirstLevelByTipoCatalogoId(id);
-		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
+		List<Catalogo> catalogos = catalogoService.findByTipoCatalogoId(agrupacion);
 		LOGGER.info("/catalogo/findFirtsLevelByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: "
 				+ util.filterUsuId(token));
 		return catalogos;
 	}
 
 	/**
-	 * Controller para buscar por segundo nivel en base al tipo de catalogo
+	 * Controller para buscar por el CAT ID HIJO de la tabla agrupacion
 	 * 
 	 * @param id: Identificador del catalogo
 	 * @return catalogos
@@ -109,7 +117,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Catalogo> secondLevel(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findSecondLevelByTipoCatalogoId(id);
-		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
+		List<Catalogo> catalogos = catalogoService.findByTipoCatalogoId(agrupacion);
 		LOGGER.info("/catalogo/findSecondLevelByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: "
 				+ util.filterUsuId(token));
 		return catalogos;
@@ -125,7 +133,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ApiOperation(value = "Get Items by Catalogo", response = Item.class)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Item> getItem(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
-		List<Item> items = itemservice.findByCatalogoId(id);
+		List<Item> items = itemService.findByCatalogoId(id);
 		LOGGER.info("/item/findByCatalogo/{id}" + items.toString() + " usuario: " + util.filterUsuId(token));
 		return items;
 	}
@@ -141,7 +149,7 @@ public class MicroCatalogoController implements ErrorController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Catalogo> getCatalogoHijo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
 		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByCatalogoPadre(id);
-		List<Catalogo> catalogos = catalogoservice.findByTipoCatalogoId(agrupacion);
+		List<Catalogo> catalogos = catalogoService.findByTipoCatalogoId(agrupacion);
 		LOGGER.info(
 				"/catalogo/findByCatalogoPadre/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
@@ -153,14 +161,14 @@ public class MicroCatalogoController implements ErrorController {
 	 * @param id: Identificador del catalogo
 	 * @return catalogos: Retorna los catalogos hijosF
 	 */
-	@RequestMapping(value = "/catalogo/findByIdCatalogo/{id}", method = RequestMethod.GET)
-	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Catalogo.class)
-	@ResponseStatus(HttpStatus.OK)
-	public Catalogo finByIdCatalago(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
-		Catalogo catalogo = catalogoservice.findByCatId(id).get();
-		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString() + " usuario: " + util.filterUsuId(token));
-		return catalogo;
-	}
+//	@RequestMapping(value = "/catalogo/findByIdCatalogo/{id}", method = RequestMethod.GET)
+//	@ApiOperation(value = "Obtiene Catalago Hijo by Catalogo Padre", response = Catalogo.class)
+//	@ResponseStatus(HttpStatus.OK)
+//	public Catalogo finByIdCatalago(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
+//		Catalogo catalogo = catalogoService.findByCatId(id).get();
+//		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString() + " usuario: " + util.filterUsuId(token));
+//		return catalogo;
+//	}
 
 	/**
 	 * Controller para buscar todos los tipos Catalogos (Excepto RENAGRO)
@@ -183,12 +191,12 @@ public class MicroCatalogoController implements ErrorController {
 	 * @param id: Identificador del catalogo
 	 * @return catalogo
 	 */
-	@RequestMapping(value = "/catalogo/findByCatCodigo/{catCodigo}", method = RequestMethod.GET)
+	@RequestMapping(value = "/catalogo/findByCatCodigo/{catCodigo}/{tipCatCodigo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene un catalogo por cat Codigo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public Catalogo finByCatCodigoCatalago(@PathVariable String catCodigo,
+	public Catalogo finByCatCodigoCatalago(@PathVariable String catCodigo, @PathVariable Long tipCatCodigo,
 			@RequestHeader(name = "Authorization") String token) {
-		Catalogo catalogo = catalogoservice.findByCatCodigo(catCodigo).get();
+		Catalogo catalogo = catalogoService.findByCatCodigoAndTipCatId(catCodigo, tipCatCodigo).get();
 		LOGGER.info("/catalogo/findByIdCatalogo/{id}" + catalogo.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogo;
 	}
@@ -199,20 +207,78 @@ public class MicroCatalogoController implements ErrorController {
 	 * @param id: Identificador del catalogo anterior
 	 * @return catalogo
 	 */
-	@RequestMapping(value = "/catalogo/findByIdAnterior/{idanterior}", method = RequestMethod.GET)
-	@ApiOperation(value = "Obtiene un catalogo por id anterior", response = Catalogo.class)
-	@ResponseStatus(HttpStatus.OK)
-	public Catalogo findByIdAnterior(@PathVariable Long idanterior,
+//	@RequestMapping(value = "/catalogo/findByIdAnterior/{idanterior}", method = RequestMethod.GET)
+//	@ApiOperation(value = "Obtiene un catalogo por id anterior", response = Catalogo.class)
+//	@ResponseStatus(HttpStatus.OK)
+//	public Catalogo findByIdAnterior(@PathVariable Long idanterior,
+//			@RequestHeader(name = "Authorization") String token) {
+//		Catalogo catalogo = catalogoService.findByIdAnterior(idanterior).get();
+//		LOGGER.info("/catalogo/findByIdAnterior/{idanterior}" + catalogo.toString() + " usuario: "
+//				+ util.filterUsuId(token));
+//		return catalogo;
+//	}
+
+	// ---------------------------------- NUEVOS METODOS
+
+	/**
+	 * Inserta un nuevo registro en la entidad
+	 * 
+	 * @param entidad: entidad a insertar
+	 * @return ResponseController: Retorna el id creado
+	 */
+	@PostMapping(value = "/create/")
+	@ApiOperation(value = "Crear nuevo registro", response = ResponseController.class)
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<ResponseController> postEntity(@Validated @RequestBody Catalogo Catalogo,
 			@RequestHeader(name = "Authorization") String token) {
-		Catalogo catalogo = catalogoservice.findByIdAnterior(idanterior).get();
-		LOGGER.info("/catalogo/findByIdAnterior/{idanterior}" + catalogo.toString() + " usuario: "
-				+ util.filterUsuId(token));
-		return catalogo;
+		Catalogo off = catalogoService.save(Catalogo);
+		LOGGER.info("Creado: " + Catalogo + " usuario: " + Catalogo.getCatRegUsu());
+		return ResponseEntity.ok(new ResponseController(off.getCatId(), "Creado"));
+	}
+
+	/**
+	 * Actualiza un registro
+	 * 
+	 * @param usuId:   Identificador del usuario que va a actualizar
+	 * 
+	 * @param entidad: entidad a actualizar
+	 * @return ResponseController: Retorna el id actualizado
+	 */
+	@PostMapping(value = "/update/{tipCatid}/{usuId}")
+	@ApiOperation(value = "Actualizar los registros", response = ResponseController.class)
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<ResponseController> update(@Validated @RequestBody Catalogo update,
+			@PathVariable Long tipCatId, @PathVariable Integer usuId,
+			@RequestHeader(name = "Authorization") String token) {
+		update.setCatActUsu(usuId);
+		Catalogo off = catalogoService.update(update, tipCatId);
+		LOGGER.info("Actualizado: " + off + " usuario: " + usuId);
+		return ResponseEntity.ok(new ResponseController(off.getCatId(), "Actualizado"));
+	}
+
+	/**
+	 * Realiza un eliminado logico del registro
+	 * 
+	 * @param id:    Identificador del registro
+	 * @param usuId: Identificador del usuario que va a eliminar
+	 * @return ResponseController: Retorna el id eliminado
+	 */
+	@GetMapping(value = "/delete/{id}/{tipCatId}/{usuId}")
+	@ApiOperation(value = "Remove Catalogo by id")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<ResponseController> deleteOfficer(@PathVariable String id, @PathVariable Long tipCatId,
+			@PathVariable Integer usuId, @RequestHeader(name = "Authorization") String token) {
+		Catalogo deleteTemplate = catalogoService.findByCatCodigoAndTipCatId(id, tipCatId)
+				.orElseThrow(() -> new InvalidConfigurationPropertyValueException("Catalogo", "Id", id.toString()));
+		deleteTemplate.setCatEliminado(true);
+		deleteTemplate.setCatActUsu(usuId);
+		Catalogo officerDel = catalogoService.save(deleteTemplate);
+		LOGGER.info("Eliminado: " + id + " usuario: " + usuId);
+		return ResponseEntity.ok(new ResponseController(officerDel.getCatId(), "eliminado"));
 	}
 
 	@Override
 	public String getErrorPath() {
-		// TODO Auto-generated method stub
 		return PATH;
 	}
 

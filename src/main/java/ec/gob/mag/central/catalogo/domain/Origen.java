@@ -1,6 +1,5 @@
 package ec.gob.mag.central.catalogo.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -9,36 +8,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.UpdateTimestamp;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ec.gob.mag.central.catalogo.util.Util;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-//============== LOMBOK =============
-@Getter
-@Setter
 @ToString(of = "oriId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//========== JPA ======================
+@Data
 
 @Entity
 @Table(name = "tbl_origen", schema = "sc_catalogos")
-public class Origen implements Serializable {
-	private static final long serialVersionUID = 1722665206845571246L;
+public class Origen {
 
 	@Id
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Origen")
@@ -52,31 +47,60 @@ public class Origen implements Serializable {
 	@JsonProperty("oriNombre")
 	private String oriNombre;
 
-	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
-	@Temporal(TemporalType.TIMESTAMP)
-	@UpdateTimestamp
-	@Column(name = "time_stamp")
-	@JsonProperty("timeStamp")
-	private Date timeStamp;
+	/******************************************************
+	 * SECCION - RELACIONES JPA
+	 ******************************************************/
 
-	@ApiModelProperty(value = " Estado de tipo catalogo", notes = "***", position = 10)
-	@Column(name = "estado", length = 2)
-	@JsonProperty("estado")
-	private String estado;
-
-	@ApiModelProperty(value = "Eliminado logico", notes = "***")
-	@Column(name = "ori_eliminado")
-	@JsonProperty("oriEliminado")
-	private Boolean oriEliminado;
-
-	@ApiModelProperty(value = "Estado del registro", notes = "***")
-	@Column(name = "ori_estado")
+	/*****************************************************
+	 * SECCION - CAMPOS POR DEFECTO EN TODAS LAS ENTIDADES
+	 *****************************************************/
+	@ApiModelProperty(value = "11=activo  12=inactivo", required = true, allowableValues = "11=>activo, 12=>inactivo", example = "11")
+	@Column(name = "ori_estado", columnDefinition = "Integer default 11")
 	@JsonProperty("oriEstado")
+	@JsonInclude(Include.NON_NULL)
 	private Integer oriEstado;
 
+	@ApiModelProperty(value = "Fecha de registro del campo", example = "")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ori_reg_fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@JsonProperty("oripRegFecha")
+	@JsonInclude(Include.NON_NULL)
+	private Date oriRegFecha;
+
+	@ApiModelProperty(value = "Id de usuario que creó el regristro", example = "")
+	@Column(name = "ori_reg_usu", nullable = false)
+	@JsonProperty("oriRegUsu")
+	@JsonInclude(Include.NON_NULL)
+	@NotNull(message = "_error.validation_blank.message")
+	private Integer oriRegUsu;
+
+	@ApiModelProperty(value = "Fecha en la que hizo la actualización del registro", example = "")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ori_act_fecha")
+	@JsonProperty("oriActFecha")
+	@JsonInclude(Include.NON_NULL)
+	private Date oriActFecha;
+
+	@ApiModelProperty(value = "Id de usuario que actualizacio del campo", example = "")
+	@Column(name = "ori_act_usu")
+	@JsonProperty("oriActUsu")
+	private Integer oriActUsu;
+
+	@ApiModelProperty(value = "Este campo almacena los valores f =false para eliminado logico  y t= true para indicar que está activo", required = true, allowableValues = "false=>no eliminado lógico, true=> eliminado lógico", example = "")
+	@Column(name = "ori_eliminado", columnDefinition = "boolean default false")
+	@JsonProperty("oriEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean oriEliminado;
+
 	@PrePersist
-	public void prePersist() {
-		this.timeStamp = Util.dateNow();
-		this.estado = "ac";
+	void prePersist() {
+		this.oriEstado = 11;
+		this.oriEliminado = false;
+		this.oriRegFecha = new Date();
+	}
+
+	@PreUpdate
+	void preUpdate() {
+		this.oriActFecha = new Date();
 	}
 }

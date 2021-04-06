@@ -11,26 +11,34 @@ import org.springframework.stereotype.Service;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.domain.Item;
 import ec.gob.mag.central.catalogo.enums.Constante;
-import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
-import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
+import ec.gob.mag.central.catalogo.exception.MyNotFoundException;
 import ec.gob.mag.central.catalogo.repository.ItemRepository;
 
-/**
- * @author PITPPA
- * @version FINAL
- */
-@Service("itemservice")
+@Service("itemService")
 public class ItemService {
+
 	@Autowired
 	@Qualifier("itemRepository")
 	private ItemRepository itemRepository;
+
 	@Autowired
 	private MessageSource messageSource;
 
-	@Autowired
-	@Qualifier("catalogoRepository")
-	private CatalogoRepository catalogoRepository;
-
+//	public void clearObjectLazyVariables(Catalogo usuario) {
+//		usuario.getAgrupacion().stream().map(u -> {
+//			u.getTipoCatalogo().setAgrupacion(null);
+//			return u;
+//		}).collect(Collectors.toList());
+//	}
+//
+//	public List<Catalogo> clearListLazyVariables(List<Catalogo> usuarios) {
+//		if (usuarios != null)
+//			usuarios = usuarios.stream().map(u -> {
+//				clearObjectLazyVariables(u);
+//				return u;
+//			}).collect(Collectors.toList());
+//		return usuarios;
+//	}
 	/**
 	 * Servicio para buscar por el id del catálogo
 	 * 
@@ -38,10 +46,11 @@ public class ItemService {
 	 * @return items: Retorna la cobertura en base al párametro de entrada
 	 */
 	public List<Item> findByCatalogoId(Long id) {
-		List<Item> items = itemRepository.findByCatalogo_catIdAndCatalogo_catEliminadoAndCatalogo_catEstado(id, false,
-				Constante.ESTADO_ACTIVO.getCodigo());
+		List<Item> items = itemRepository
+				.findByCatalogo_catIdAndCatalogo_catEliminadoAndCatalogo_catEstadoAndIteEliminadoAndIteEstado(id, false,
+						Constante.ESTADO_ACTIVO.getCodigo(), false, Constante.ESTADO_ACTIVO.getCodigo());
 		if (items.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Catalogo.class.getName()));
 		return items;

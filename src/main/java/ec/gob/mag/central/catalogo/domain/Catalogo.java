@@ -1,6 +1,5 @@
 package ec.gob.mag.central.catalogo.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,34 +13,33 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-//============== LOMBOK =============
-@Getter
-@Setter
 @ToString(of = "catId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//========== JPA ======================
+@Data
 
 @Entity
 @Table(name = "tbl_catalogo", schema = "sc_catalogos")
-public class Catalogo implements Serializable {
-	private static final long serialVersionUID = -1383240679545632350L;
+public class Catalogo {
 
 	@Id
 	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
@@ -80,37 +78,65 @@ public class Catalogo implements Serializable {
 	@JsonProperty("idAnterior")
 	private Long idAnterior;
 
-	@ApiModelProperty(value = "Fecha en la que hizo la actualización")
-	@Temporal(TemporalType.TIMESTAMP)
-	@UpdateTimestamp
-	@Column(name = "time_stamp")
-	@JsonProperty("timeStamp")
-	private Date timeStamp;
-
-	@ApiModelProperty(value = " Estado de catalogo", notes = "***")
-	@Column(name = "estado", length = 2)
-	@JsonProperty("estado")
-	private String estado;
-
-	@ApiModelProperty(value = "Eliminado logico", notes = "***")
-	@Column(name = "cat_eliminado")
-	@JsonProperty("catEliminado")
-	private Boolean catEliminado;
-
-	@ApiModelProperty(value = "Estado del registro")
-	@Column(name = "cat_estado")
-	@JsonProperty("catEstado")
-	private Integer catEstado;
-
+	/******************************************************
+	 * SECCION - RELACIONES JPA
+	 ******************************************************/
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "agr_id")
 	@JsonProperty("agrupacion")
 	private List<Agrupacion> agrupacion;
 
+	/*****************************************************
+	 * SECCION - CAMPOS POR DEFECTO EN TODAS LAS ENTIDADES
+	 *****************************************************/
+	@ApiModelProperty(value = "11=activo  12=inactivo", required = true, allowableValues = "11=>activo, 12=>inactivo", example = "11")
+	@Column(name = "cat_estado", columnDefinition = "Integer default 11")
+	@JsonProperty("catEstado")
+	@JsonInclude(Include.NON_NULL)
+	private Integer catEstado;
+
+	@ApiModelProperty(value = "Fecha de registro del campo", example = "")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "cat_reg_fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@JsonProperty("catRegFecha")
+	@JsonInclude(Include.NON_NULL)
+	private Date catRegFecha;
+
+	@ApiModelProperty(value = "Id de usuario que creó el regristro", example = "")
+	@Column(name = "cat_reg_usu", nullable = false)
+	@JsonProperty("catRegUsu")
+	@JsonInclude(Include.NON_NULL)
+	@NotNull(message = "_error.validation_blank.message")
+	private Integer catRegUsu;
+
+	@ApiModelProperty(value = "Fecha en la que hizo la actualización del registro", example = "")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "cat_act_fecha")
+	@JsonProperty("catActFecha")
+	@JsonInclude(Include.NON_NULL)
+	private Date catActFecha;
+
+	@ApiModelProperty(value = "Id de usuario que actualizacio del campo", example = "")
+	@Column(name = "cat_act_usu")
+	@JsonProperty("catActUsu")
+	private Integer catActUsu;
+
+	@ApiModelProperty(value = "Este campo almacena los valores f =false para eliminado logico  y t= true para indicar que está activo", required = true, allowableValues = "false=>no eliminado lógico, true=> eliminado lógico", example = "")
+	@Column(name = "cat_eliminado", columnDefinition = "boolean default false")
+	@JsonProperty("catEliminado")
+	@JsonInclude(Include.NON_NULL)
+	private Boolean catEliminado;
+
 	@PrePersist
-	public void catPersist() {
-		this.estado = "ac";
-		this.timeStamp = new Date();
+	void prePersist() {
+		this.catEstado = 11;
+		this.catEliminado = false;
+		this.catRegFecha = new Date();
+	}
+
+	@PreUpdate
+	void preUpdate() {
+		this.catActFecha = new Date();
 	}
 
 }

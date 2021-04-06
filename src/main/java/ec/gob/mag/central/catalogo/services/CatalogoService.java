@@ -13,16 +13,13 @@ import org.springframework.stereotype.Service;
 import ec.gob.mag.central.catalogo.domain.Agrupacion;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.enums.Constante;
-import ec.gob.mag.central.catalogo.exception.CatalogoNotFoundException;
+import ec.gob.mag.central.catalogo.exception.MyNotFoundException;
 import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
 import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
 
-/**
- * @author PITPPA
- * @version FINAL
- */
-@Service("catalogoservice")
+@Service("catalogoService")
 public class CatalogoService {
+
 	@Autowired
 	@Qualifier("catalogoRepository")
 	private CatalogoRepository catalogoRepository;
@@ -49,6 +46,7 @@ public class CatalogoService {
 			}).collect(Collectors.toList());
 		return usuarios;
 	}
+	// ====================================================== OLD
 
 	/**
 	 * Servicio para encontrar todos los catalogos
@@ -56,16 +54,16 @@ public class CatalogoService {
 	 * @return Todos los registros de cobertura que estan almacenados en la base de
 	 *         datos BDC
 	 */
-	public List<Catalogo> findAll() {
-		List<Catalogo> catalogos = catalogoRepository.findByCatEliminadoAndCatEstado(false,
-				Constante.ESTADO_ACTIVO.getCodigo());
-		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					this.getClass().getName()));
-		clearListLazyVariables(catalogos);
-		return catalogos;
-	}
+//	public List<Catalogo> findAll() {
+//		List<Catalogo> catalogos = catalogoRepository.findByCatEliminadoAndCatEstado(false,
+//				Constante.ESTADO_ACTIVO.getCodigo());
+//		if (catalogos.isEmpty())
+//			throw new CatalogoNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					this.getClass().getName()));
+//		clearListLazyVariables(catalogos);
+//		return catalogos;
+//	}
 
 	/**
 	 * Servicio para buscar catalogos por id
@@ -74,15 +72,15 @@ public class CatalogoService {
 	 * @return catalogo: Retorna todos los catalogos filtrados por el parámetros de
 	 *         entrada
 	 */
-	public Optional<Catalogo> findByCatId(Long catId) {
-		Optional<Catalogo> catalogo = catalogoRepository.findById(catId);
-		if (!catalogo.isPresent())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					catId));
-		clearObjectLazyVariables(catalogo.get());
-		return catalogo;
-	}
+//	public Optional<Catalogo> findByCatId(Long catId) {
+//		Optional<Catalogo> catalogo = catalogoRepository.findById(catId);
+//		if (!catalogo.isPresent())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					catId));
+//		clearObjectLazyVariables(catalogo.get());
+//		return catalogo;
+//	}
 
 	/**
 	 * Servicio para buscar catalogos por car Codigo
@@ -91,16 +89,16 @@ public class CatalogoService {
 	 * @return catalogo: Retorna todos los catalogos filtrados por el parámetros de
 	 *         entrada
 	 */
-	public Optional<Catalogo> findByCatCodigo(String catCodigo) {
-		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigoAndCatEliminadoAndCatEstado(catCodigo, false,
-				Constante.ESTADO_ACTIVO.getCodigo());
-		if (!catalogo.isPresent())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					catCodigo));
-		clearObjectLazyVariables(catalogo.get());
-		return catalogo;
-	}
+//	public Optional<Catalogo> findByCatCodigo(String catCodigo) {
+//		Optional<Catalogo> catalogo = catalogoRepository.findByCatCodigoAndCatEliminadoAndCatEstado(catCodigo, false,
+//				Constante.ESTADO_ACTIVO.getCodigo());
+//		if (!catalogo.isPresent())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					catCodigo));
+//		clearObjectLazyVariables(catalogo.get());
+//		return catalogo;
+//	}
 
 	/**
 	 * Servicio para buscar catalogos por car Codigo
@@ -109,16 +107,16 @@ public class CatalogoService {
 	 * @return catalogo: Retorna todos los catalogos filtrados por el parámetros de
 	 *         entrada
 	 */
-	public Optional<Catalogo> findByIdAnterior(Long catCodigo) {
-		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnteriorAndCatEliminadoAndCatEstado(catCodigo, false,
-				Constante.ESTADO_ACTIVO.getCodigo());
-		if (!catalogo.isPresent())
-			throw new CatalogoNotFoundException(String.format(
-					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
-					catCodigo));
-		clearObjectLazyVariables(catalogo.get());
-		return catalogo;
-	}
+//	public Optional<Catalogo> findByIdAnterior(Long catCodigo) {
+//		Optional<Catalogo> catalogo = catalogoRepository.findByIdAnteriorAndCatEliminadoAndCatEstado(catCodigo, false,
+//				Constante.ESTADO_ACTIVO.getCodigo());
+//		if (!catalogo.isPresent())
+//			throw new MyNotFoundException(String.format(
+//					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+//					catCodigo));
+//		clearObjectLazyVariables(catalogo.get());
+//		return catalogo;
+//	}
 
 	/**
 	 * Servicio para buscar por catalogos hijos
@@ -126,13 +124,15 @@ public class CatalogoService {
 	 * @param ids: catalogo padre
 	 * @return catalogos hijos
 	 */
+	// ******************************************* PENDIENTE
 	public List<Catalogo> findByTipoCatalogoId(List<Long> ids) {
 		List<Catalogo> catalogos = catalogoRepository.findByCatIdInAndCatEliminadoAndCatEstado(ids, false,
 				Constante.ESTADO_ACTIVO.getCodigo());
 		if (catalogos.isEmpty())
-			throw new CatalogoNotFoundException(String.format(
+			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					Catalogo.class.getName()));
+
 		catalogos.stream().forEach(m -> {
 			List<Agrupacion> agr = agrupacionRepository.findByCatIdHijoAndAgrEliminadoAndAgrEstado(m.getCatId(), false,
 					Constante.ESTADO_ACTIVO.getCodigo());
@@ -143,23 +143,65 @@ public class CatalogoService {
 		return catalogos;
 	}
 
+	// ========================================= END OLD
 	/**
-	 * Servicio para guardar catálgos
+	 * Metodo para encontrar todos los registros
 	 * 
-	 * @param catalogo: Contiene todos campos de la entidad catalogos para guardar
-	 * @return catalogo: El cobertura creado
+	 * @return Todos los registros de la tabla
 	 */
-	public Catalogo save(Catalogo catalogo) {
+	public List<Catalogo> findAll() {
+		List<Catalogo> catalogo = catalogoRepository.findByCatEliminadoAndCatEstadoEquals(false,
+				Constante.ESTADO_ACTIVO.getCodigo());
+		if (catalogo.isEmpty())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					this.getClass().getName()));
+		clearListLazyVariables(catalogo);
+		return catalogo;
+	}
+
+	/**
+	 * Busca un registro por Id
+	 * 
+	 * @param id: Identificador del registro
+	 * @return entidad: Retorna todos los registros filtrados por el parámetros de
+	 *         entrada
+	 */
+	public Optional<Catalogo> findByCatCodigoAndTipCatId(String id, Long tipCatId) {
+		Optional<Catalogo> catalogo = catalogoRepository
+				.findByCatCodigoAndAgrupacion_TipoCatalogo_tipocatIdAndCatEliminadoAndCatEstadoEquals(id, tipCatId,
+						false, Constante.ESTADO_ACTIVO.getCodigo());
+		if (!catalogo.isPresent())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					id));
+		clearObjectLazyVariables(catalogo.get());
+		return catalogo;
+	}
+
+	/**
+	 * Busca un registro por Id
+	 * 
+	 * @param id: Identificador del registro
+	 * @return entidad: Retorna todos los registros filtrados por el parámetros de
+	 *         entrada
+	 */
+	public Catalogo update(Catalogo catalogo, Long tipCatId) {
+		Optional<Catalogo> off = findByCatCodigoAndTipCatId(catalogo.getCatCodigo(), tipCatId);
+		if (!off.isPresent())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					off.get().getCatId()));
 		return catalogoRepository.save(catalogo);
 	}
 
 	/**
-	 * Servicio para eliminar un registro de catalogos
+	 * Guarda un registro
 	 * 
-	 * @param CobId: Identificador del catálogo
+	 * @param entidad: Contiene todos campos de la entidad para guardar
+	 * @return catalogo: La entidad Guardada
 	 */
-	public void deleteById(Long cobId) {
-		catalogoRepository.deleteById(cobId);
+	public Catalogo save(Catalogo officer) {
+		return catalogoRepository.save(officer);
 	}
-
 }

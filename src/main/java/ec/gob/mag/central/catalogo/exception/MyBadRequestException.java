@@ -3,11 +3,14 @@ package ec.gob.mag.central.catalogo.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class CatalogoNotFoundException extends RuntimeException {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class MyBadRequestException extends RuntimeException {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
-	public CatalogoNotFoundException(String message) {
+	public MyBadRequestException(String message) {
 		super(message);
 	}
 }
