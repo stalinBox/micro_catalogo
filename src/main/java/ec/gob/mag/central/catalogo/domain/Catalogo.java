@@ -17,7 +17,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -69,16 +68,6 @@ public class Catalogo {
 	@JsonProperty("catIdentificativo")
 	private String catIdentificativo;
 
-	/*@ApiModelProperty(value = "Codigo Catalogo")
-	@Column(name = "cat_codigo", nullable = false)
-	@JsonProperty("catCodigo")
-	private String catCodigo;
-
-	@ApiModelProperty(value = "Id padre del registro")
-	@Column(name = "id_anterior")
-	@JsonProperty("idAnterior")
-	private Long idAnterior;*/
-
 	/******************************************************
 	 * SECCION - RELACIONES JPA
 	 ******************************************************/
@@ -128,10 +117,6 @@ public class Catalogo {
 	@JsonInclude(Include.NON_NULL)
 	private Boolean catEliminado;
 	
-	@Transient
-	@JsonProperty("catCodigo2")
-	@JsonInclude(Include.NON_NULL)
-	private String catCodigo2;
 
 	@PrePersist
 	void prePersist() {
