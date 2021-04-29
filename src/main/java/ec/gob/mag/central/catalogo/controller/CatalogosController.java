@@ -4,12 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -226,7 +224,7 @@ public class CatalogosController implements ErrorController {
 	 * @param entidad: entidad a insertar
 	 * @return ResponseController: Retorna el id creado
 	 */
-	@PostMapping(value = "/create/")
+	@PostMapping(value = "/catalogo/create/")
 	@ApiOperation(value = "Crear nuevo registro", response = ResponseController.class)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ResponseController> postEntity(@Validated @RequestBody Catalogo Catalogo,
@@ -239,22 +237,23 @@ public class CatalogosController implements ErrorController {
 	/**
 	 * Actualiza un registro
 	 * 
-	 * @param usuId:   Identificador del usuario que va a actualizar
+	 * @param usuId:   Identificador del catalogo que va a actualizar
 	 * 
 	 * @param entidad: entidad a actualizar
 	 * @return ResponseController: Retorna el id actualizado
 	 */
-	@PostMapping(value = "/update/{tipCatid}/{usuId}")
-	@ApiOperation(value = "Actualizar los registros", response = ResponseController.class)
+	/*@PostMapping(value = "/catalogo/update/{origenId}")
+	@ApiOperation(value = "Actualizar registro de catalogos", response = ResponseController.class)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<ResponseController> update(@Validated @RequestBody Catalogo update,
-			@PathVariable Long tipCatId, @PathVariable Integer usuId,
+	public ResponseEntity<ResponseController> updateCatalogo(@Validated @RequestBody Catalogo update, @PathVariable Long origenId,
 			@RequestHeader(name = "Authorization") String token) {
-		update.setCatActUsu(usuId);
-		Catalogo off = catalogoService.update(update, tipCatId);
-		LOGGER.info("Actualizado: " + off + " usuario: " + usuId);
+		update.setCatActUsu(Integer.parseInt(util.filterUsuId(token)));
+		Catalogo off = catalogoService.update(update, origenId);
+		LOGGER.info("catalogo/update/" + " usuario: " + util.filterUsuId(token));
 		return ResponseEntity.ok(new ResponseController(off.getCatId(), "Actualizado"));
-	}
+		
+		
+	}*/
 
 	/**
 	 * Realiza un eliminado logico del registro
@@ -263,20 +262,68 @@ public class CatalogosController implements ErrorController {
 	 * @param usuId: Identificador del usuario que va a eliminar
 	 * @return ResponseController: Retorna el id eliminado
 	 */
-	@GetMapping(value = "/delete/{id}/{tipCatId}/{usuId}")
-	@ApiOperation(value = "Remove Catalogo by id")
+	/*@GetMapping(value = "/catalogo/delete/{idCatalogo}/{origenId}")
+	@ApiOperation(value = "Remove Catalogo by id Catalogo y Origen Id")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<ResponseController> deleteOfficer(@PathVariable String id, @PathVariable Long tipCatId,
+	public ResponseEntity<ResponseController> deleteCatalogo(@PathVariable String idCatalogo, @PathVariable Long origenId,
 			@PathVariable Integer usuId, @RequestHeader(name = "Authorization") String token) {
-		Catalogo deleteTemplate = catalogoService.findByCatCodigoAndTipCatId(id, tipCatId)
-				.orElseThrow(() -> new InvalidConfigurationPropertyValueException("Catalogo", "Id", id.toString()));
-		deleteTemplate.setCatEliminado(true);
-		deleteTemplate.setCatActUsu(usuId);
-		Catalogo officerDel = catalogoService.save(deleteTemplate);
-		LOGGER.info("Eliminado: " + id + " usuario: " + usuId);
-		return ResponseEntity.ok(new ResponseController(officerDel.getCatId(), "eliminado"));
+		Catalogo deleteCatalogo = catalogoService.findCatalogo(idCatalogo, origenId)
+				.orElseThrow(() -> new InvalidConfigurationPropertyValueException("Catalogo", "Id", idCatalogo));
+		deleteCatalogo.setCatEliminado(true);
+		deleteCatalogo.setCatActUsu(usuId);
+		Catalogo catalogoDel = catalogoService.save(deleteCatalogo);
+		LOGGER.info("/catalogo/delete/" +idCatalogo +" usuario: " + util.filterUsuId(token));
+		return ResponseEntity.ok(new ResponseController(catalogoDel.getCatId(), "eliminado"));
+	}*/
+	
+	
+	//IMPLEMENTACIONES DE HOMOLOGACION
+	/**
+	 * Controller para buscar un catalogo por id
+	 * 
+	 * @param id: Identificador del catalogo (homologado en caso de )
+	 * @return catalogo
+	 */
+	@RequestMapping(value = "/catalogo/findByIdRna/{idCatalogo}/{origenId}", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene un catalogo por Id Catalogo y Origen", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public Catalogo findByIdRna(@PathVariable String idCatalogo, @PathVariable Long origenId,
+			@RequestHeader(name = "Authorization") String token) {
+		Catalogo catalogo = catalogoService.findByIdRna(idCatalogo, origenId).get();
+		LOGGER.info("/catalogo/findByIdRna/" + " usuario: " + util.filterUsuId(token));
+		return catalogo;
+	}	
+	
+	@RequestMapping(value = "/catalogo/findById/{idCatalogo}", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene un catalogo por Id Codigo", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public Catalogo findCatalogoById(@PathVariable String idCatalogo, @RequestHeader(name = "Authorization") String token) {
+		Catalogo catalogo = catalogoService.findById(idCatalogo).get();
+		LOGGER.info("/catalogo/findById/" + " usuario: " + util.filterUsuId(token));
+		return catalogo;
 	}
-
+	
+	@RequestMapping(value = "/catalogo/findCatalogosByTipo/{tipoCatalogo}", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene los catalogos por tipo", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Catalogo> findCatalogosByTipo(@PathVariable Long tipoCatalogo, @RequestHeader(name = "Authorization") String token) {
+		List<Catalogo> catalogos = catalogoService.findCatalogosByTipo(tipoCatalogo);
+		LOGGER.info(
+				"catalogo/findCatalogosByTipo" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+		return catalogos;
+	}
+	
+	
+	@RequestMapping(value = "/catalogo/findCatalogosRnaByTipo/{tipoCatalogo}", method = RequestMethod.GET)
+	@ApiOperation(value = "Obtiene los catalogos RNA por tipo", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Catalogo> findCatalogosRnaByTipo(@PathVariable Long tipoCatalogo, @RequestHeader(name = "Authorization") String token) {
+		List<Catalogo> catalogos = catalogoService.findCatalogosRnaByTipo(tipoCatalogo);
+		LOGGER.info(
+				"catalogo/findCatalogosRnaByTipo" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+		return catalogos;
+	}
+	
 	@Override
 	public String getErrorPath() {
 		return PATH;

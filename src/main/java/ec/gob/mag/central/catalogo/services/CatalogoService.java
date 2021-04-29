@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 import ec.gob.mag.central.catalogo.domain.Agrupacion;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
+import ec.gob.mag.central.catalogo.domain.Homologacion;
 import ec.gob.mag.central.catalogo.enums.Constante;
 import ec.gob.mag.central.catalogo.exception.MyNotFoundException;
 import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
 import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
+import ec.gob.mag.central.catalogo.repository.HomologacionRepository;
 
 @Service("catalogoService")
 public class CatalogoService {
@@ -27,6 +29,10 @@ public class CatalogoService {
 	@Autowired
 	@Qualifier("agrupacionRepository")
 	private AgrupacionRepository agrupacionRepository;
+	
+	@Autowired
+	@Qualifier("homologacionRepository")
+	private HomologacionRepository homologacionRepository;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -168,9 +174,10 @@ public class CatalogoService {
 	 *         entrada
 	 */
 	public Optional<Catalogo> findByCatCodigoAndTipCatId(String id, Long tipCatId) {
-		Optional<Catalogo> catalogo = catalogoRepository
+		Optional<Catalogo> catalogo = null;
+		        /*catalogoRepository
 				.findByCatCodigoAndAgrupacion_TipoCatalogo_tipocatIdAndCatEliminadoAndCatEstadoEquals(id, tipCatId,
-						false, Constante.ESTADO_ACTIVO.getCodigo());
+						false, Constante.ESTADO_ACTIVO.getCodigo());*/
 		if (!catalogo.isPresent())
 			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
@@ -186,14 +193,105 @@ public class CatalogoService {
 	 * @return entidad: Retorna todos los registros filtrados por el parámetros de
 	 *         entrada
 	 */
-	public Catalogo update(Catalogo catalogo, Long tipCatId) {
-		Optional<Catalogo> off = findByCatCodigoAndTipCatId(catalogo.getCatCodigo(), tipCatId);
+	/*public Catalogo update(Catalogo catalogo, Long origen) {
+		Optional<Catalogo> off = this.findCatalogo(catalogo.getCatId().toString(), origen);
 		if (!off.isPresent())
 			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					off.get().getCatId()));
 		return catalogoRepository.save(catalogo);
+	}*/
+	
+	
+	
+	/**
+	 * Busca un registro por Id
+	 * 
+	 * @param catId: Identificador del registro
+	 * @return entidad: Retorna el registro cuyo id es el ingresado
+	 */
+	public Optional<Catalogo> findById(String catId) {
+		
+		Optional<Catalogo> catalogo = catalogoRepository.findByCatIdAndCatEliminadoAndCatEstado(Long.parseLong(catId), false, Constante.ESTADO_ACTIVO.getCodigo());
+		
+		if (!catalogo.isPresent())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					catId));
+		clearObjectLazyVariables(catalogo.get());
+		return catalogo;
 	}
+	
+	
+	/**
+	 * Busca un registro por Id y origen
+	 * 
+	 * @param catId: Identificador del registro
+	 * @param origen: Id de Origen
+	 * @return entidad: Retorna el registro cuyo id y origen es el ingresado
+	 */
+	public Optional<Catalogo> findByIdRna(String catId, Long origen) {
+		
+		Optional<Catalogo> catalogo = null;
+		if ((origen.equals( new Long(1))) || (origen.equals(new Long(7))))
+					catalogo=catalogoRepository
+				.findCatalogo(catId, origen, false, Constante.ESTADO_ACTIVO.getCodigo());
+		
+		if (!catalogo.isPresent())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					catId));
+		
+		catalogo.get().setCatId(Long.parseLong(catId));
+		clearObjectLazyVariables(catalogo.get());
+		return catalogo;
+	}
+	
+	
+	/**
+	 * Busca catalogos por tipo
+	 * 
+	 * @param tipCatalogo: Tipo Catalogo
+	 * @return List<Catalogo>: Lista de catálogo
+	 */
+	public List<Catalogo> findCatalogosByTipo(Long tipCatalogo)
+	{
+		List<Catalogo> catalogos = catalogoRepository.findCatalogosByTipo(tipCatalogo);
+		if (catalogos.isEmpty())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					this.getClass().getName()));
+		
+		catalogos.stream().forEach(c->c.setAgrupacion(null));
+		return catalogos;
+	}
+	
+	
+	
+	/**
+	 * Busca catalogos RNA por tipo
+	 * 
+	 * @param tipCatalogo: Tipo Catalogo
+	 * @return List<Catalogo>: Lista de catálogo
+	 */
+	public List<Catalogo> findCatalogosRnaByTipo(Long tipCatalogo)
+	{
+		List<Catalogo> catalogos = this.findCatalogosByTipo(tipCatalogo);
+		
+		catalogos.stream().forEach(c->{
+			try {
+			Optional <Homologacion> h = homologacionRepository.findByCatId(c.getCatId());
+			c.setCatId(new Long(h.get().getHomIdHomologado()));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		});
+		return catalogos;
+	}
+	
+	
 
 	/**
 	 * Guarda un registro

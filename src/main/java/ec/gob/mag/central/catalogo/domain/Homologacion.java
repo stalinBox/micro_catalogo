@@ -17,7 +17,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -39,110 +38,89 @@ import lombok.ToString;
 @Data
 
 @Entity
-@Table(name = "tbl_catalogo", schema = "sc_catalogos")
-public class Catalogo {
+@Table(name = "tbl_homologacion", schema = "sc_catalogos")
+public class Homologacion {
 
 	@Id
-	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Catalogo")
-	@Column(name = "cat_id", unique = true, nullable = false)
+	@ApiModelProperty(value = "Este campo es  la clave primaria de la tabla Homologacion")
+	@Column(name = "hom_id", unique = true, nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty("homId")
+	private Long homId;
+	
+	@ApiModelProperty(value = "Id Catalogo")
+	@Column(name = "cat_id", nullable = false)
 	@JsonProperty("catId")
 	private Long catId;
 
 	@ApiModelProperty(value = "Nombre del Catalogo")
-	@Column(name = "cat_nombre", nullable = false)
+	@Column(name = "cat_nombre")
 	@JsonProperty("catNombre")
 	private String catNombre;
-
-	@ApiModelProperty(value = "Descripcion del Catalogo")
-	@Column(name = "cat_descripcion", nullable = false)
-	@JsonProperty("catDescripcion")
-	private String catDescripcion;
-
-	@ApiModelProperty(value = "Abreviatura del Catalogo")
-	@Column(name = "cat_abreviatura", nullable = false)
-	@JsonProperty("catAbreviatura")
-	private String catAbreviatura;
-
-	@ApiModelProperty(value = "Identificativo del Catalogo")
-	@Column(name = "cat_identificativo", nullable = false)
-	@JsonProperty("catIdentificativo")
-	private String catIdentificativo;
-
-	/*@ApiModelProperty(value = "Codigo Catalogo")
-	@Column(name = "cat_codigo", nullable = false)
-	@JsonProperty("catCodigo")
-	private String catCodigo;
-
-	@ApiModelProperty(value = "Id padre del registro")
-	@Column(name = "id_anterior")
-	@JsonProperty("idAnterior")
-	private Long idAnterior;*/
-
-	/******************************************************
-	 * SECCION - RELACIONES JPA
-	 ******************************************************/
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "agr_id")
-	@JsonProperty("agrupacion")
-	private List<Agrupacion> agrupacion;
-
+	
+	
+	@ApiModelProperty(value = "Id Homologado")
+	@Column(name = "hom_id_homologado", nullable = false)
+	@JsonProperty("homIdHomologado")
+	private String homIdHomologado;
+	
+	
+	@ApiModelProperty(value = "Id Origen")
+	@Column(name = "ori_id", nullable = false)
+	@JsonProperty("oriId")
+	private Long oriId;
+	
 	/*****************************************************
 	 * SECCION - CAMPOS POR DEFECTO EN TODAS LAS ENTIDADES
 	 *****************************************************/
 	@ApiModelProperty(value = "11=activo  12=inactivo", required = true, allowableValues = "11=>activo, 12=>inactivo", example = "11")
-	@Column(name = "cat_estado", columnDefinition = "Integer default 11")
-	@JsonProperty("catEstado")
+	@Column(name = "hom_estado", columnDefinition = "Integer default 11")
+	@JsonProperty("homEstado")
 	@JsonInclude(Include.NON_NULL)
-	private Integer catEstado;
+	private Integer homEstado;
 
 	@ApiModelProperty(value = "Fecha de registro del campo", example = "")
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "cat_reg_fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	@JsonProperty("catRegFecha")
+	@Column(name = "hom_reg_fecha", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@JsonProperty("homRegFecha")
 	@JsonInclude(Include.NON_NULL)
-	private Date catRegFecha;
+	private Date homRegFecha;
 
 	@ApiModelProperty(value = "Id de usuario que creó el regristro", example = "")
-	@Column(name = "cat_reg_usu", nullable = false)
-	@JsonProperty("catRegUsu")
+	@Column(name = "hom_reg_usu", nullable = false)
+	@JsonProperty("homRegUsu")
 	@JsonInclude(Include.NON_NULL)
 	@NotNull(message = "_error.validation_blank.message")
-	private Integer catRegUsu;
+	private Integer homRegUsu;
 
 	@ApiModelProperty(value = "Fecha en la que hizo la actualización del registro", example = "")
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "cat_act_fecha")
-	@JsonProperty("catActFecha")
+	@Column(name = "hom_act_fecha")
+	@JsonProperty("homActFecha")
 	@JsonInclude(Include.NON_NULL)
-	private Date catActFecha;
+	private Date homActFecha;
 
 	@ApiModelProperty(value = "Id de usuario que actualizacio del campo", example = "")
-	@Column(name = "cat_act_usu")
-	@JsonProperty("catActUsu")
-	private Integer catActUsu;
+	@Column(name = "hom_act_usu")
+	@JsonProperty("homActUsu")
+	private Integer homActUsu;
 
 	@ApiModelProperty(value = "Este campo almacena los valores f =false para eliminado logico  y t= true para indicar que está activo", required = true, allowableValues = "false=>no eliminado lógico, true=> eliminado lógico", example = "")
-	@Column(name = "cat_eliminado", columnDefinition = "boolean default false")
-	@JsonProperty("catEliminado")
+	@Column(name = "hom_eliminado", columnDefinition = "boolean default false")
+	@JsonProperty("homEliminado")
 	@JsonInclude(Include.NON_NULL)
-	private Boolean catEliminado;
-	
-	@Transient
-	@JsonProperty("catCodigo2")
-	@JsonInclude(Include.NON_NULL)
-	private String catCodigo2;
+	private Boolean homEliminado;
 
 	@PrePersist
 	void prePersist() {
-		this.catEstado = 11;
-		this.catEliminado = false;
-		this.catRegFecha = new Date();
+		this.homEstado = 11;
+		this.homEliminado = false;
+		this.homRegFecha = new Date();
 	}
 
 	@PreUpdate
 	void preUpdate() {
-		this.catActFecha = new Date();
+		this.homActFecha = new Date();
 	}
 
 }
