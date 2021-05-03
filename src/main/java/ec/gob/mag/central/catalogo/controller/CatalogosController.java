@@ -153,7 +153,6 @@ public class CatalogosController implements ErrorController {
 		return catalogos;
 	}
 
-
 	/**
 	 * Controller para buscar todos los tipos Catalogos (Excepto RENAGRO)
 	 * 
@@ -184,9 +183,8 @@ public class CatalogosController implements ErrorController {
 		LOGGER.info("Creado: " + Catalogo + " usuario: " + Catalogo.getCatRegUsu());
 		return ResponseEntity.ok(new ResponseController(off.getCatId(), "Creado"));
 	}
-	
-	
-	//IMPLEMENTACIONES DE HOMOLOGACION
+
+	// IMPLEMENTACIONES DE HOMOLOGACION
 	/**
 	 * Controller para buscar un catalogo por id
 	 * 
@@ -201,38 +199,54 @@ public class CatalogosController implements ErrorController {
 		Catalogo catalogo = catalogoService.findByIdRna(idCatalogo, origenId).get();
 		LOGGER.info("/catalogo/findByIdRna/" + " usuario: " + util.filterUsuId(token));
 		return catalogo;
-	}	
-	
+	}
+
 	@RequestMapping(value = "/catalogo/findById/{idCatalogo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene un catalogo por Id Codigo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public Catalogo findCatalogoById(@PathVariable String idCatalogo, @RequestHeader(name = "Authorization") String token) {
+	public Catalogo findCatalogoById(@PathVariable String idCatalogo,
+			@RequestHeader(name = "Authorization") String token) {
 		Catalogo catalogo = catalogoService.findById(idCatalogo).get();
 		LOGGER.info("/catalogo/findById/" + " usuario: " + util.filterUsuId(token));
 		return catalogo;
 	}
-	
+
 	@RequestMapping(value = "/catalogo/findCatalogosByTipo/{tipoCatalogo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene los catalogos por tipo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> findCatalogosByTipo(@PathVariable Long tipoCatalogo, @RequestHeader(name = "Authorization") String token) {
+	public List<Catalogo> findCatalogosByTipo(@PathVariable Long tipoCatalogo,
+			@RequestHeader(name = "Authorization") String token) {
 		List<Catalogo> catalogos = catalogoService.findCatalogosByTipo(tipoCatalogo);
-		LOGGER.info(
-				"catalogo/findCatalogosByTipo" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+		LOGGER.info("catalogo/findCatalogosByTipo" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
 	}
-	
-	
+
 	@RequestMapping(value = "/catalogo/findCatalogosRnaByTipo/{tipoCatalogo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene los catalogos RNA por tipo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> findCatalogosRnaByTipo(@PathVariable Long tipoCatalogo, @RequestHeader(name = "Authorization") String token) {
+	public List<Catalogo> findCatalogosRnaByTipo(@PathVariable Long tipoCatalogo,
+			@RequestHeader(name = "Authorization") String token) {
 		List<Catalogo> catalogos = catalogoService.findCatalogosRnaByTipo(tipoCatalogo);
-		LOGGER.info(
-				"catalogo/findCatalogosRnaByTipo" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+		LOGGER.info("catalogo/findCatalogosRnaByTipo" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
 	}
-	
+
+	/**
+	 * Controller para buscar tipo de catalogo PARA AFC
+	 * 
+	 * @param id: Identificador del catalogo
+	 * @return catalogos: Retorna todos los catalogos por agrupación
+	 */
+	@RequestMapping(value = "/catalogo/findByCatIdHijo/{catIdHijo}", method = RequestMethod.GET)
+	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Catalogo> getCatalogosByTipCatId(@PathVariable Long catIdHijo,
+			@RequestHeader(name = "Authorization") String token) {
+		List<Catalogo> catalogos = catalogoService.findTipcatIdRecursive(catIdHijo);
+		LOGGER.info("/catalogo/findByIdTipCat/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+		return catalogos;
+	}
+
 	@Override
 	public String getErrorPath() {
 		return PATH;
