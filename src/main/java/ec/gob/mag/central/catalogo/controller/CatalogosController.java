@@ -76,16 +76,16 @@ public class CatalogosController implements ErrorController {
 	 * @param id: Identificador del catalogo
 	 * @return catalogos: Retorna todos los catalogos por agrupación
 	 */
-	@RequestMapping(value = "/catalogo/findByIdTipoCatalogo/{id}", method = RequestMethod.GET)
-	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
-	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> getCatalogo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
-		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
-		List<Catalogo> catalogos = catalogoService.findByTipoCatalogoId(agrupacion);
-		LOGGER.info(
-				"/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
-		return catalogos;
-	}
+//	@RequestMapping(value = "/catalogo/findByIdTipoCatalogo/{id}", method = RequestMethod.GET)
+//	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
+//	@ResponseStatus(HttpStatus.OK)
+//	public List<Catalogo> getCatalogo(@PathVariable Long id, @RequestHeader(name = "Authorization") String token) {
+//		List<Long> agrupacion = agrupacionservice.findIdAgrupacionByTipoCatalogoId(id);
+//		List<Catalogo> catalogos = catalogoService.findByTipoCatalogoId(agrupacion);
+//		LOGGER.info(
+//				"/catalogo/findByIdTipoCatalogo/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+//		return catalogos;
+//	}
 
 	/**
 	 * Controller para buscar por el CAT ID PADRE de la tabla agrupacion
