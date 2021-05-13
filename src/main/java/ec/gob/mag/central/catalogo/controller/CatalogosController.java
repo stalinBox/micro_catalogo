@@ -186,9 +186,10 @@ public class CatalogosController implements ErrorController {
 
 	// IMPLEMENTACIONES DE HOMOLOGACION
 	/**
-	 * Controller para buscar un catalogo por id
+	 * Buscar un catalogo RNA por idCatalogo y Origen
 	 * 
-	 * @param id: Identificador del catalogo (homologado en caso de )
+	 * @param idCatalogo: Identificador del catalogo homologado
+	 * @param origenId: Origen Catalogo 1 RNA - 7 Cultivos
 	 * @return catalogo
 	 */
 	@RequestMapping(value = "/catalogo/findByIdRna/{idCatalogo}/{origenId}", method = RequestMethod.GET)
@@ -201,6 +202,13 @@ public class CatalogosController implements ErrorController {
 		return catalogo;
 	}
 
+	
+	/**
+	 * Buscar un catalogo por idCatalogo
+	 * 
+	 * @param idCatalogo: Identificador del catalogo
+	 * @return catalogo
+	 */
 	@RequestMapping(value = "/catalogo/findById/{idCatalogo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene un catalogo por Id Codigo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -210,7 +218,13 @@ public class CatalogosController implements ErrorController {
 		LOGGER.info("/catalogo/findById/" + " usuario: " + util.filterUsuId(token));
 		return catalogo;
 	}
-
+	
+	/**
+	 * Buscar catalogos por tipo
+	 * 
+	 * @param tipoCatalogo: Identificador del tipo catalogo
+	 * @return List<Catalogos>
+	 */
 	@RequestMapping(value = "/catalogo/findCatalogosByTipo/{tipoCatalogo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene los catalogos por tipo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -221,6 +235,12 @@ public class CatalogosController implements ErrorController {
 		return catalogos;
 	}
 
+	/**
+	 * Buscar catalogos RNA por tipo
+	 * 
+	 * @param tipoCatalogo: Identificador del tipo catalogo
+	 * @return List<Catalogos>
+	 */
 	@RequestMapping(value = "/catalogo/findCatalogosRnaByTipo/{tipoCatalogo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Obtiene los catalogos RNA por tipo", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
