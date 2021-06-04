@@ -63,6 +63,23 @@ public class ImagenService {
 	 * @return entidad: Retorna todos los registros filtrados por el parámetros de
 	 *         entrada
 	 */
+	public List<Imagen> findByCatId(Integer catId) {
+		List<Imagen> imagen = imagenRepository.findByCatIdAndImgEliminadoAndImgEstadoEquals(catId, false,
+				Constante.ESTADO_ACTIVO.getCodigo());
+		if (imagen.isEmpty())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					catId));
+		return imagen;
+	}
+
+	/**
+	 * Busca un registro por Id
+	 * 
+	 * @param id: Identificador del registro
+	 * @return entidad: Retorna todos los registros filtrados por el parámetros de
+	 *         entrada
+	 */
 	public Imagen update(Imagen Imagen) {
 		Optional<Imagen> off = findById(Imagen.getImgId());
 		if (!off.isPresent())

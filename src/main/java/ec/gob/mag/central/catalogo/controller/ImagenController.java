@@ -89,6 +89,22 @@ public class ImagenController implements ErrorController {
 	}
 
 	/**
+	 * Busca los registros por Id de la entidad
+	 * 
+	 * @param id: Identificador de la entidad
+	 * @return parametrosCarga: Retorna el registro encontrado
+	 */
+	@GetMapping(value = "/findCatId/{id}")
+	@ApiOperation(value = "Get Imagen by id", response = Imagen.class)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<List<?>> findByCatId(@Validated @PathVariable Integer id,
+			@RequestHeader(name = "Authorization") String token) {
+		List<Imagen> officer = imagenService.findByCatId(id);
+		LOGGER.info("findById: " + officer.toString() + " usuario: " + util.filterUsuId(token));
+		return ResponseEntity.ok(officer);
+	}
+
+	/**
 	 * Inserta un nuevo registro en la entidad
 	 * 
 	 * @param entidad: entidad a insertar

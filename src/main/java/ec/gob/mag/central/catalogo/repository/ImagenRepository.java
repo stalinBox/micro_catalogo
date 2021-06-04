@@ -16,4 +16,7 @@ public interface ImagenRepository extends CrudRepository<Imagen, Long> {
 
 	// FIN BY ID
 	Optional<Imagen> findByImgIdAndImgEliminadoAndImgEstadoEquals(Long id, boolean tmpEliminado, Integer tmpEstado);
+
+	// FIN BY CAT_ID
+	List<Imagen> findByCatIdAndImgEliminadoAndImgEstadoEquals(Integer catId, boolean tmpEliminado, Integer tmpEstado);
 }
