@@ -68,6 +68,8 @@ public class Catalogo {
 	@JsonProperty("catIdentificativo")
 	private String catIdentificativo;
 
+	private Integer tipcatIdHijo;
+
 	/******************************************************
 	 * SECCION - RELACIONES JPA
 	 ******************************************************/
@@ -116,7 +118,6 @@ public class Catalogo {
 	@JsonProperty("catEliminado")
 	@JsonInclude(Include.NON_NULL)
 	private Boolean catEliminado;
-	
 
 	@PrePersist
 	void prePersist() {
