@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import ec.gob.mag.central.catalogo.domain.Agrupacion;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.domain.Homologacion;
+import ec.gob.mag.central.catalogo.domain.dto.CatalogoRecursiveDTO;
 import ec.gob.mag.central.catalogo.enums.Constante;
 import ec.gob.mag.central.catalogo.exception.MyNotFoundException;
 import ec.gob.mag.central.catalogo.repository.AgrupacionRepository;
+import ec.gob.mag.central.catalogo.repository.CatalogoRecursiveDTORepository;
 import ec.gob.mag.central.catalogo.repository.CatalogoRepository;
 import ec.gob.mag.central.catalogo.repository.HomologacionRepository;
 
@@ -33,6 +35,10 @@ public class CatalogoService {
 	@Autowired
 	@Qualifier("homologacionRepository")
 	private HomologacionRepository homologacionRepository;
+
+	@Autowired
+	@Qualifier("catalogoRecursiveDTORepository")
+	private CatalogoRecursiveDTORepository catalogoRecursiveDTORepository;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -198,5 +204,21 @@ public class CatalogoService {
 	 */
 	public Catalogo save(Catalogo officer) {
 		return catalogoRepository.save(officer);
+	}
+
+	/**
+	 * Metodo para encontrar todos los registro hijos de la tabla de agrupacion
+	 * recurisva para AFC
+	 * 
+	 * @return Todos los registros de la tabla
+	 */
+	public List<CatalogoRecursiveDTO> findTipcatIdRecursive(Integer tipCatId) {
+		List<CatalogoRecursiveDTO> catalogo = catalogoRecursiveDTORepository.findCatalogoRecursiveDTO(tipCatId);
+		if (catalogo.isEmpty())
+			throw new MyNotFoundException(String.format(
+					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
+					this.getClass().getName()));
+//		clearListLazyVariables(catalogo);
+		return catalogo;
 	}
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ec.gob.mag.central.catalogo.domain.Catalogo;
 import ec.gob.mag.central.catalogo.domain.Item;
 import ec.gob.mag.central.catalogo.domain.TipoCatalogo;
+import ec.gob.mag.central.catalogo.domain.dto.CatalogoRecursiveDTO;
 import ec.gob.mag.central.catalogo.services.AgrupacionService;
 import ec.gob.mag.central.catalogo.services.CatalogoService;
 import ec.gob.mag.central.catalogo.services.ItemService;
@@ -189,7 +190,7 @@ public class CatalogosController implements ErrorController {
 	 * Buscar un catalogo RNA por idCatalogo y Origen
 	 * 
 	 * @param idCatalogo: Identificador del catalogo homologado
-	 * @param origenId: Origen Catalogo 1 RNA - 7 Cultivos
+	 * @param origenId:   Origen Catalogo 1 RNA - 7 Cultivos
 	 * @return catalogo
 	 */
 	@RequestMapping(value = "/catalogo/findByIdRna/{idCatalogo}/{origenId}", method = RequestMethod.GET)
@@ -202,7 +203,6 @@ public class CatalogosController implements ErrorController {
 		return catalogo;
 	}
 
-	
 	/**
 	 * Buscar un catalogo por idCatalogo
 	 * 
@@ -218,7 +218,7 @@ public class CatalogosController implements ErrorController {
 		LOGGER.info("/catalogo/findById/" + " usuario: " + util.filterUsuId(token));
 		return catalogo;
 	}
-	
+
 	/**
 	 * Buscar catalogos por tipo
 	 * 
@@ -257,12 +257,12 @@ public class CatalogosController implements ErrorController {
 	 * @param id: Identificador del catalogo
 	 * @return catalogos: Retorna todos los catalogos por agrupación
 	 */
-	@RequestMapping(value = "/catalogo/findByCatIdHijo/{catIdHijo}", method = RequestMethod.GET)
+	@RequestMapping(value = "/catalogo/findCatalogosByTipoRecursive/{catIdHijo}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get Agrupacion by id", response = Catalogo.class)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Catalogo> getCatalogosByTipCatId(@PathVariable Long catIdHijo,
+	public List<CatalogoRecursiveDTO> getCatalogosByTipCatId(@PathVariable Integer catIdHijo,
 			@RequestHeader(name = "Authorization") String token) {
-		List<Catalogo> catalogos = catalogoService.findTipcatIdRecursive(catIdHijo);
+		List<CatalogoRecursiveDTO> catalogos = catalogoService.findTipcatIdRecursive(catIdHijo);
 		LOGGER.info("/catalogo/findByIdTipCat/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
 		return catalogos;
 	}
