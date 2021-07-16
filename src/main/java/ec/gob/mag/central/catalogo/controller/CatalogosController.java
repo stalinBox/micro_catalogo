@@ -252,7 +252,8 @@ public class CatalogosController implements ErrorController {
 	}
 
 	/**
-	 * Controller para buscar tipo de catalogo PARA AFC
+	 * Controller para buscar tipo de catalogo RECURSIVO PARA BUSCAR LOS
+	 * HIJOS(DIFERENTES NIVELES) PARA AFC
 	 * 
 	 * @param id: Identificador del catalogo
 	 * @return catalogos: Retorna todos los catalogos por agrupación
@@ -263,7 +264,8 @@ public class CatalogosController implements ErrorController {
 	public List<CatalogoRecursiveDTO> getCatalogosByTipCatId(@PathVariable Integer catIdHijo,
 			@RequestHeader(name = "Authorization") String token) {
 		List<CatalogoRecursiveDTO> catalogos = catalogoService.findTipcatIdRecursive(catIdHijo);
-		LOGGER.info("/catalogo/findByIdTipCat/{id}" + catalogos.toString() + " usuario: " + util.filterUsuId(token));
+		LOGGER.info("/catalogo/findCatalogosByTipoRecursive/{catIdHijo}" + catalogos.toString() + " usuario: "
+				+ util.filterUsuId(token));
 		return catalogos;
 	}
 

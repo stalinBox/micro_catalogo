@@ -213,12 +213,17 @@ public class CatalogoService {
 	 * @return Todos los registros de la tabla
 	 */
 	public List<CatalogoRecursiveDTO> findTipcatIdRecursive(Integer tipCatId) {
-		List<CatalogoRecursiveDTO> catalogo = catalogoRecursiveDTORepository.findCatalogoRecursiveDTO(tipCatId);
-		if (catalogo.isEmpty())
+
+//		List<CatalogoRecursiveDTO> catalogoPadreInicial = catalogoRecursiveDTORepository
+//				.findCatalogoRecursiveDTOBytipCatId(tipCatId);
+
+		List<CatalogoRecursiveDTO> catalogoHijosRecursivos = catalogoRecursiveDTORepository
+				.findCatalogoRecursiveDTOByCatIdPadre(tipCatId);
+
+		if (catalogoHijosRecursivos.isEmpty())
 			throw new MyNotFoundException(String.format(
 					messageSource.getMessage("error.entity_cero_exist.message", null, LocaleContextHolder.getLocale()),
 					this.getClass().getName()));
-//		clearListLazyVariables(catalogo);
-		return catalogo;
+		return catalogoHijosRecursivos;
 	}
 }
