@@ -214,9 +214,6 @@ public class CatalogoService {
 	 */
 	public List<CatalogoRecursiveDTO> findTipcatIdRecursive(Integer tipCatId) {
 
-//		List<CatalogoRecursiveDTO> catalogoPadreInicial = catalogoRecursiveDTORepository
-//				.findCatalogoRecursiveDTOBytipCatId(tipCatId);
-
 		List<CatalogoRecursiveDTO> catalogoHijosRecursivos = catalogoRecursiveDTORepository
 				.findCatalogoRecursiveDTOByCatIdPadre(tipCatId);
 
