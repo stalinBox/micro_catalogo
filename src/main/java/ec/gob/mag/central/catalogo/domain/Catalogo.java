@@ -72,7 +72,7 @@ public class Catalogo {
 	 * SECCION - RELACIONES JPA
 	 ******************************************************/
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "agr_id")
+	@JoinColumn(name = "cat_id_hijo")
 	@JsonProperty("agrupacion")
 	private List<Agrupacion> agrupacion;
 
